@@ -2973,24 +2973,24 @@
                 </div>
             </div>
 
-            <div class="pcard" data-cat="data" data-project="plibrary" style="cursor:pointer;">
+            <div class="pcard" data-cat="web" data-project="butika" style="cursor:pointer;">
                 <div class="pthumb">
-                    <div class="pico" style="color:var(--accent)"><svg viewBox="0 0 24 24">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    <div class="pico" style="color:var(--accent2)"><svg viewBox="0 0 24 24">
+                            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                            <path d="M12 6v6l4 2" />
                         </svg></div>
                     <div class="p-preview">
-                        <div class="p-preview-icon">🗄️</div>
-                        <div class="p-preview-role">Backend Developer</div>
-                        <div class="p-preview-note">Efficient resource management using advanced data structures —
-                            binary trees, hash maps.</div>
+                        <div class="p-preview-icon">🌸</div>
+                        <div class="p-preview-role">Full-Stack Developer</div>
+                        <div class="p-preview-note">Filipino wellness app for daily mood tracking, habit building, and
+                            self-care routines.</div>
                     </div>
                 </div>
                 <div class="pbody">
-                    <p class="ptype">Data Structures</p>
-                    <h3 class="pname">P.Library</h3>
-                    <p class="pdesc">Custom library system using advanced data structures for efficient resource
-                        management and retrieval.</p>
+                    <p class="ptype">Mobile Application</p>
+                    <h3 class="pname">Buti-Ka</h3>
+                    <p class="pdesc">Filipino wellness and self-care app with mood tracking, habit routines, and daily
+                        check-ins.</p>
                     <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
                     <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
@@ -3905,7 +3905,8 @@
                     'Multi-sensor support on a single ESP32 with FreeRTOS tasks',
                 ],
                 links: [
-                    { label: 'View Project', url: '#' },
+                    { label: 'View Project', url: 'https://nurturaloam.tech/' },
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/Nurtura-IoT' },
                 ],
                 slides: [
                     { icon: '🌱', label: 'System Overview', sub: 'Add circuit diagram / schematic' },
@@ -3979,22 +3980,23 @@
                 type: 'Media Platform',
                 title: 'Soundscape',
                 role: 'Frontend Developer',
-                desc: 'Soundscape is a music streaming web application with playlist management, audio controls, and a clean responsive UI. It supports local media or API-fetched tracks and provides an immersive listening experience with waveform visualization.',
+                desc: 'Soundscape is a music streaming web application built with pure HTML, CSS, and JavaScript. It features genre-based browsing across categories like Japanese Hits and Korean Hits, a responsive audio player with playback controls, and a clean, immersive UI. Deployed live on Vercel.',
                 languages: ['HTML5', 'CSS3', 'JavaScript'],
                 stack: [
                     { icon: '⚡', name: 'Vanilla JS', role: 'Core Logic' },
-                    { icon: '🎵', name: 'Web Audio API', role: 'Audio Processing' },
-                    { icon: '🎨', name: 'CSS Animations', role: 'UI / Waveform' },
-                    { icon: '🌐', name: 'REST API', role: 'Track Fetching' },
+                    { icon: '🎵', name: 'HTML Audio API', role: 'Audio Playback' },
+                    { icon: '🎨', name: 'CSS Animations', role: 'UI / Transitions' },
+                    { icon: '🌐', name: 'Vercel', role: 'Deployment' },
                 ],
                 features: [
+                    'Genre-based music library (J-Hits, K-Hits & more)',
                     'Responsive audio player with play/pause/skip controls',
-                    'Playlist creation and queue management',
-                    'Waveform or visualizer animation synced to playback',
-                    'Search and filter tracks by title or artist',
-                    'Local storage for saved playlists',
+                    'Clean, card-based track browsing UI',
+                    'Multi-page genre navigation with smooth transitions',
+                    'Fully static — no backend required',
                 ],
                 links: [
+                    { label: 'View Project', url: 'https://soundscape-ten-alpha.vercel.app/' },
                     { label: 'GitHub', url: 'https://github.com/AJShin09/soundscape' },
                 ],
                 slides: [
@@ -4003,32 +4005,32 @@
                     { icon: '🌊', label: 'Waveform Visualizer', sub: 'Add visualizer screenshot / GIF' },
                 ]
             },
-            plibrary: {
-                type: 'Data Structures',
-                title: 'P.Library',
+            butika: {
+                type: 'Mobile Application',
+                title: 'Buti-Ka',
                 role: 'Full-Stack Developer',
-                desc: 'P.Library is a console-based library system that implements advanced data structures for fast resource lookup and management. It uses binary search trees for catalog ordering, hash maps for O(1) lookups, and custom linked lists for borrow queue management.',
-                languages: ['C', 'C++'],
+                desc: 'Buti-Ka is a Filipino wellness and self-care mobile app designed to encourage healthy habits through daily check-ins, mood tracking, and guided routines. Built with a focus on simplicity and local cultural relevance, it helps users build positive mental and physical wellness practices.',
+                languages: ['JavaScript', 'HTML5', 'CSS3'],
                 stack: [
-                    { icon: '🌲', name: 'Binary Search Tree', role: 'Catalog Sorting' },
-                    { icon: '#️⃣', name: 'Hash Map', role: 'O(1) Lookups' },
-                    { icon: '🔗', name: 'Linked List', role: 'Borrow Queue' },
-                    { icon: '⚙️', name: 'GCC / G++', role: 'Compiler' },
+                    { icon: '📱', name: 'React Native / Web', role: 'Frontend' },
+                    { icon: '🗄️', name: 'Local Storage', role: 'Data Persistence' },
+                    { icon: '🎨', name: 'CSS / Animations', role: 'UI / UX' },
+                    { icon: '🔗', name: 'GitHub', role: 'Version Control' },
                 ],
                 features: [
-                    'BST-based book catalog for sorted insertion and retrieval',
-                    'Hash map implementation for constant-time search',
-                    'Linked-list borrow queue with priority support',
-                    'File I/O for persistent data storage',
-                    'CLI interface with menu-driven navigation',
+                    'Daily mood and wellness check-in system',
+                    'Guided self-care routines and habit tracking',
+                    'Filipino-language UI for local cultural relevance',
+                    'Progress tracking with visual summaries',
+                    'Lightweight, offline-capable design',
                 ],
                 links: [
-                    { label: 'GitHub', url: 'https://github.com/AJShin09/P.Library' },
+                    { label: 'GitHub', url: 'https://github.com/neoaia/Buti-Ka-Final' },
                 ],
                 slides: [
-                    { icon: '🌲', label: 'Data Structure Diagram', sub: 'Add BST / hash map diagram' },
-                    { icon: '💻', label: 'CLI Interface', sub: 'Add terminal screenshot' },
-                    { icon: '📊', label: 'Performance Benchmarks', sub: 'Add benchmark chart' },
+                    { icon: '🌸', label: 'Home / Dashboard', sub: 'Add screenshot of main screen' },
+                    { icon: '📊', label: 'Mood Tracker', sub: 'Add mood tracking screenshot' },
+                    { icon: '✅', label: 'Habit Routines', sub: 'Add routines/habits screenshot' },
                 ]
             },
             yusisay: {
@@ -4051,7 +4053,7 @@
                     'Content moderation flags without exposing identity',
                 ],
                 links: [
-                    { label: 'GitHub', url: 'https://github.com/AJShin09/Yusi-Say' },
+                    { label: 'GitHub', url: 'https://github.com/zchuwie/yusisay' },
                 ],
                 slides: [
                     { icon: '💬', label: 'Main Feed View', sub: 'Add screenshot of post feed' },
