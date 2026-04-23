@@ -262,19 +262,102 @@
         .hero {
             min-height: 100vh;
             padding-top: 58px;
+            display: flex;
+            align-items: stretch;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            width: 100%;
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 0 6rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
             position: relative;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .hstat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-scroll-hint {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeUp .5s .85s forwards;
+        }
+
+        .scroll-line {
+            width: 24px;
+            height: 1px;
+            background: var(--border2);
+            position: relative;
             overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .hero-scroll-hint span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .5rem;
+            letter-spacing: .22em;
+            color: var(--text3);
+            text-transform: uppercase;
+        }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .38rem;
+            margin-bottom: 1.4rem;
+            opacity: 0;
+            animation: fadeUp .5s .48s forwards;
+        }
+
+        .hero-chip {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .52rem;
+            letter-spacing: .1em;
+            color: var(--text3);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: .16rem .44rem;
         }
 
         .hero-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 4rem 2rem 4rem 6rem;
+            padding: 4rem 3rem 3rem 0;
             position: relative;
-            z-index: 2;
+            z-index: 5;
+            pointer-events: all;
         }
 
         .status-bar {
@@ -499,15 +582,6 @@
             color: var(--accent2);
         }
 
-        .hstats {
-            display: flex;
-            gap: 2rem;
-            padding-top: 1.4rem;
-            border-top: 1px solid var(--border);
-            opacity: 0;
-            animation: fadeUp .5s .62s forwards;
-        }
-
         .sn {
             font-family: 'Exo 2', sans-serif;
             font-size: 1.7rem;
@@ -528,15 +602,22 @@
         }
 
         /* HERO RIGHT 3D */
-        .hero-right {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        .hero-canvas-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: all;
         }
 
-        .hero-right::before {
+        .hero-right {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .hero-canvas-bg::before {
             content: '';
             position: absolute;
             width: 480px;
@@ -547,9 +628,12 @@
             animation: ringPulse 5s ease-in-out infinite;
             pointer-events: none;
             z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .hero-right::after {
+        .hero-canvas-bg::after {
             content: '';
             position: absolute;
             width: 320px;
@@ -559,18 +643,21 @@
             animation: ringPulse 5s ease-in-out infinite reverse;
             pointer-events: none;
             z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         @keyframes ringPulse {
 
             0%,
             100% {
-                transform: scale(1);
+                transform: translate(-50%, -50%) scale(1);
                 opacity: .45;
             }
 
             50% {
-                transform: scale(1.04);
+                transform: translate(-50%, -50%) scale(1.04);
                 opacity: 1;
             }
         }
@@ -581,8 +668,10 @@
             width: 100%;
             height: 100%;
             z-index: 2;
+            pointer-events: none;
         }
 
+        /* Restore pointer-events for the canvas via JS — Three.js attaches listeners directly */
         .canvas-controls {
             position: absolute;
             bottom: 1.3rem;
@@ -591,7 +680,8 @@
             display: flex;
             align-items: center;
             gap: .45rem;
-            z-index: 10;
+            z-index: 20;
+            pointer-events: all;
         }
 
         .ctrl-btn {
@@ -624,12 +714,13 @@
             right: .8rem;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
+            z-index: 20;
             display: flex;
             flex-direction: column;
             gap: .35rem;
             opacity: 0;
             animation: fadeIn .5s 1.5s forwards;
+            pointer-events: all;
         }
 
         .xray-panel .xp-lbl {
@@ -1710,6 +1801,571 @@
             z-index: 1;
         }
 
+        /* PLINK HINT */
+        .plink-hint {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            display: inline-flex;
+            align-items: center;
+            gap: .32rem;
+            transition: color .2s, gap .2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .pcard:hover .plink-hint {
+            color: var(--accent);
+            gap: .58rem;
+        }
+
+        .plink-hint svg {
+            width: 10px;
+            height: 10px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* PROJECT MODAL */
+        .pmodal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(2, 12, 22, .88);
+            backdrop-filter: blur(14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s;
+        }
+
+        .pmodal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .pmodal {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+            transform: translateY(20px);
+            transition: transform .3s;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border2) transparent;
+        }
+
+        .pmodal-overlay.open .pmodal {
+            transform: translateY(0);
+        }
+
+        .pmodal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: .14em;
+            color: var(--text3);
+            background: var(--bg2);
+            border: none;
+            border-left: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: .55rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: color .2s, background .2s;
+        }
+
+        .pmodal-close:hover {
+            color: var(--accent);
+            background: var(--surface);
+        }
+
+        .pmodal-inner {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 0;
+            clear: both;
+        }
+
+        .pmodal-left {
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pmodal-slideshow {
+            flex: 1;
+            min-height: 340px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pmodal-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            opacity: 0;
+            transition: opacity .4s;
+        }
+
+        .pmodal-slide.active {
+            opacity: 1;
+        }
+
+        .pmodal-slide-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .65rem;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        .pslide-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .52rem;
+            letter-spacing: .14em;
+            color: var(--text3);
+            border: 1px solid var(--border);
+            padding: .1rem .35rem;
+        }
+
+        .pslide-ph-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .pslide-ph-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .1em;
+            color: var(--text3);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .pslide-ph-label span {
+            display: block;
+            font-size: .52rem;
+            color: var(--text3);
+            opacity: .55;
+        }
+
+        .pmodal-slide-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+            padding: .75rem;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .slide-btn {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .62rem;
+            color: var(--text3);
+            background: none;
+            border: 1px solid var(--border);
+            padding: .22rem .55rem;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .slide-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .slide-counter {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            color: var(--text3);
+            letter-spacing: .08em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .pmodal-right {
+            padding: 2rem;
+        }
+
+        .pmodal-type {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .52rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .4rem;
+        }
+
+        .pmodal-title {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: .6rem;
+            line-height: 1.1;
+        }
+
+        .pmodal-role-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: .1em;
+            color: var(--accent3);
+            border: 1px solid var(--a3g);
+            background: var(--a3g);
+            padding: .18rem .55rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .pmodal-desc {
+            font-size: .84rem;
+            color: var(--text2);
+            line-height: 1.85;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pmodal-section-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: .14em;
+            color: var(--accent2);
+            margin-bottom: .55rem;
+            margin-top: 1.1rem;
+        }
+
+        .pmodal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .38rem;
+            margin-bottom: .4rem;
+        }
+
+        .pmodal-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: .06em;
+            color: var(--accent);
+            border: 1px solid var(--border2);
+            background: var(--ag);
+            padding: .18rem .48rem;
+        }
+
+        .pmodal-stack {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: .38rem;
+            margin-bottom: .4rem;
+        }
+
+        .stack-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: .5rem .75rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            transition: border-color .2s;
+        }
+
+        .stack-item:hover {
+            border-color: var(--border2);
+        }
+
+        .stack-ico {
+            font-size: .95rem;
+            line-height: 1;
+        }
+
+        .stack-name {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            letter-spacing: .06em;
+            color: var(--text);
+        }
+
+        .stack-role {
+            font-size: .6rem;
+            color: var(--text3);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .pmodal-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .pmodal-features li {
+            font-size: .78rem;
+            color: var(--text2);
+            padding: .28rem 0 .28rem .9rem;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.55;
+        }
+
+        .pmodal-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pmodal-features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent2);
+            font-size: .58rem;
+        }
+
+        .pmodal-links {
+            display: flex;
+            gap: .65rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .pmodal-link {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid var(--border2);
+            background: var(--ag);
+            padding: .35rem .85rem;
+            text-decoration: none;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .38rem;
+        }
+
+        .pmodal-link:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+
+        /* PASSION GALLERY */
+        .passion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+            gap: .85rem;
+            margin-bottom: 4rem;
+        }
+
+        .passion-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: border-color .3s, transform .3s, box-shadow .3s;
+        }
+
+        .passion-card:hover {
+            border-color: var(--border2);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 220, 255, .08);
+        }
+
+        .passion-large {
+            grid-column: 1 / 3;
+        }
+
+        .passion-video {
+            grid-column: 2 / 4;
+        }
+
+        .passion-img-wrap {
+            width: 100%;
+            aspect-ratio: 16/10;
+            position: relative;
+            background: var(--surface);
+        }
+
+        .passion-large .passion-img-wrap,
+        .passion-video .passion-img-wrap {
+            aspect-ratio: 16/9;
+        }
+
+        .passion-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            margin: .6rem;
+        }
+
+        .placeholder-icon {
+            font-size: 2rem;
+            opacity: .45;
+        }
+
+        .placeholder-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .62rem;
+            letter-spacing: .1em;
+            color: var(--text3);
+        }
+
+        .placeholder-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .52rem;
+            color: var(--text3);
+            opacity: .5;
+        }
+
+        .passion-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(2, 12, 22, .92));
+            padding: 1.4rem .9rem .8rem;
+            transform: translateY(6px);
+            transition: transform .3s;
+        }
+
+        .passion-card:hover .passion-overlay {
+            transform: translateY(0);
+        }
+
+        .passion-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: .12em;
+            color: var(--accent);
+            margin-bottom: .25rem;
+        }
+
+        .passion-caption {
+            font-size: .72rem;
+            color: var(--text2);
+            line-height: 1.45;
+        }
+
+        .passion-play-badge {
+            position: absolute;
+            top: .65rem;
+            right: .65rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .5rem;
+            letter-spacing: .12em;
+            color: #000;
+            background: var(--accent2);
+            padding: .16rem .45rem;
+        }
+
+        .pslide-media {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+        }
+
+        .pslide-label-bar {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .38rem .7rem;
+            background: rgba(2, 12, 22, .85);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .pslide-num-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .5rem;
+            letter-spacing: .12em;
+            color: var(--accent);
+            border: 1px solid var(--border2);
+            padding: .08rem .32rem;
+            white-space: nowrap;
+        }
+
+        .pslide-caption {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .54rem;
+            letter-spacing: .1em;
+            color: var(--text2);
+            text-transform: uppercase;
+        }
+
+        .pslide-media img {
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #000;
+        }
+
+        .pslide-media video {
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #000;
+        }
+
+        .pslide-video {
+            background: #000;
+        }
+
+        /* Work experience header inside experience section */
+        .work-exp-header {
+            margin-top: 3.5rem;
+            margin-bottom: 1.8rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .work-exp-title {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .work-exp-title span {
+            color: var(--accent);
+        }
+
         /* FOOTER */
         footer {
             position: relative;
@@ -1781,14 +2437,49 @@
             display: none;
         }
 
+        .pcard[data-project]:hover {
+            box-shadow: 0 0 0 1px var(--border2), 0 8px 32px rgba(0, 220, 255, .07);
+        }
+
+        .pcard[data-project]:active {
+            transform: scale(.985);
+        }
+
+        /* Make .bo work on <a> tags too */
+        a.bo {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .62rem 1.55rem;
+            background: transparent;
+            color: var(--text2);
+            border: 1px solid var(--border2);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .25s;
+        }
+
+        a.bo:hover {
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
         /* RESPONSIVE */
         @media(max-width:1100px) {
             .section {
                 padding: 4rem 3rem;
             }
 
+            .hero-inner {
+                padding: 0 3rem;
+            }
+
             .hero-left {
-                padding: 3rem 2rem 3rem 3rem;
+                padding: 3rem 2rem 3rem 0;
             }
 
             .about-grid {
@@ -1806,6 +2497,27 @@
 
             .lgrid {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .passion-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .passion-large {
+                grid-column: 1 / 3;
+            }
+
+            .passion-video {
+                grid-column: 1 / 3;
+            }
+
+            .pmodal-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .pmodal-left {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
 
             footer {
@@ -1841,14 +2553,25 @@
                 min-height: auto;
             }
 
+            .hero-inner {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+            }
+
             .hero-left {
-                padding: 2.5rem 1.5rem 2rem;
+                padding: 2.5rem 0 2rem;
                 order: 2;
             }
 
             .hero-right {
+                display: none;
+            }
+
+            .hero-canvas-bg {
+                position: relative;
+                width: 100%;
                 height: 55vw;
-                min-height: 280px;
+                min-height: 260px;
                 order: 1;
             }
 
@@ -1872,6 +2595,28 @@
                 flex-direction: column;
                 text-align: center;
                 padding: 1.4rem 1.5rem;
+            }
+
+            .passion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .passion-large,
+            .passion-video {
+                grid-column: 1;
+            }
+
+            .pmodal-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .pmodal-left {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .pmodal-stack {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1914,47 +2659,17 @@
 
     <!-- HERO -->
     <section class="hero" id="home">
-        <div class="hero-left">
-            <div class="status-bar">
-                <div class="status-dot"></div><span>SYSTEM ONLINE</span> · NODE: PH-NCR-01 · UPTIME: 99.9%
-            </div>
-            <h1 class="htitle"><span class="ac glitch" data-text="ALLAN">ALLAN</span><br>JABOL JR.</h1>
-            <div class="hcode"><span class="prompt">$</span> esp32.secure_connect() → net.init() <span
-                    class="cursor"></span></div>
-            <p class="hdesc">IoT Engineer & Cybersecurity enthusiast — building connected, secure systems from chip to
-                cloud. Passionate about hardware architecture, embedded programming, and protecting people online.</p>
-            <div class="hbtns">
-                <button class="bp"
-                    onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span>Get In Touch
-                        →</span></button>
-                <button class="bo" onclick="downloadResume()">⬇ Download CV</button>
-            </div>
-            <div class="hstats">
-                <div><span class="sn">6</span>
-                    <div class="sl">Months Exp</div>
-                </div>
-                <div><span class="sn">6</span>
-                    <div class="sl">Projects</div>
-                </div>
-                <div><span class="sn">3+</span>
-                    <div class="sl">Languages</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="hero-right" id="heroRight">
+        <!-- Full-bleed 3D canvas, covers right half of viewport -->
+        <div class="hero-canvas-bg" id="heroRight">
             <canvas id="three-canvas"></canvas>
             <svg id="esp-labels-svg" xmlns="http://www.w3.org/2000/svg"></svg>
-
-            <!-- Explode level panel -->
             <div class="xray-panel" id="xrayPanel">
                 <div class="xp-lbl">XRAY</div>
-                <div class="xbtn selected" data-explode="0" title="Assembled">▣</div>
+                <div class="xbtn selected" data-explode="0" title="Assembled">&#x25A3;</div>
                 <div class="xbtn" data-explode="1" title="Layer 1">L1</div>
                 <div class="xbtn" data-explode="2" title="Layer 2">L2</div>
                 <div class="xbtn" data-explode="3" title="Full">XP</div>
             </div>
-
             <div class="canvas-controls">
                 <button class="ctrl-btn active" id="btnOrbit">ORBIT</button>
                 <span class="ctrl-sep">|</span>
@@ -1962,7 +2677,32 @@
                 <span class="ctrl-sep">|</span>
                 <button class="ctrl-btn" id="btnReset">RESET</button>
             </div>
-            <div class="drag-hint">DRAG · SCROLL · TILT UP TO DECOMPOSE</div>
+            <div class="drag-hint">DRAG &middot; SCROLL &middot; TILT UP TO DECOMPOSE</div>
+        </div>
+
+        <!-- Constrained inner grid aligns with .section below -->
+        <div class="hero-inner">
+            <div class="hero-left">
+                <div class="status-bar">
+                    <div class="status-dot"></div><span>SYSTEM ONLINE</span> &middot; NODE: PH-NCR-01 &middot; UPTIME:
+                    99.9%
+                </div>
+                <h1 class="htitle"><span class="ac glitch" data-text="ALLAN">ALLAN</span><br>JABOL JR.</h1>
+                <div class="hcode"><span class="prompt">$</span> esp32.secure_connect() &rarr; net.init() <span
+                        class="cursor"></span></div>
+                <p class="hdesc">IoT Engineer &amp; Cybersecurity enthusiast &mdash; building connected, secure systems
+                    from chip to cloud. Passionate about hardware architecture, embedded programming, and protecting
+                    people online.</p>
+                <div class="hbtns">
+                    <button class="bp"
+                        onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span>Get In
+                            Touch &rarr;</span></button>
+                    <button class="bo" onclick="downloadResume()">&#x2B07; Download CV</button>
+                    <a href="#projects" class="bo" style="text-decoration:none;">&#x26A1; View Projects</a>
+                </div>
+            </div>
+            <!-- Right col placeholder — canvas fills this area full-bleed -->
+            <div class="hero-right"></div>
         </div>
     </section>
 
@@ -2010,7 +2750,7 @@
                     </div>
                     <div class="spec">
                         <div class="spec-l">Education</div>
-                        <div class="spec-v">BSCS — In Progress</div>
+                        <div class="spec-v">BS Computer Science — In Progress</div>
                     </div>
                 </div>
             </div>
@@ -2117,6 +2857,9 @@
     <div class="section reveal" id="projects">
         <p class="stag">03 / Portfolio</p>
         <h2 class="stitle">Selected <span>Projects</span></h2>
+        <p
+            style="font-size:.78rem;color:var(--text2);margin-bottom:1.8rem;margin-top:-.8rem;font-family:'Share Tech Mono',monospace;letter-spacing:.06em;">
+            // Click a project card to view full breakdown</p>
 
         <div class="pcat-nav">
             <button class="pcat-btn active" data-filter="all">All Projects</button>
@@ -2128,7 +2871,7 @@
 
         <div class="pgrid">
             <!-- NURTURA — FEATURED IoT -->
-            <div class="pcard featured" data-cat="iot">
+            <div class="pcard featured" data-cat="iot" data-project="nurtura" style="cursor:pointer;">
                 <div class="featured-badge">⚡ Featured IoT</div>
                 <div class="pthumb">
                     <div class="pico"><svg viewBox="0 0 24 24">
@@ -2147,15 +2890,14 @@
                     <h3 class="pname">Nurtura</h3>
                     <p class="pdesc">Automated plant care system using ESP32 with soil moisture, temperature, and
                         humidity sensors. MQTT-based cloud dashboard with real-time alerts.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role — e.g.
-                            Lead Hardware Engineer, Firmware Dev]</span></div>
-                    <a href="#" class="plink">View Project <svg viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
                 </div>
             </div>
 
-            <div class="pcard" data-cat="game">
+            <div class="pcard" data-cat="game" data-project="grabity" style="cursor:pointer;">
                 <div class="pthumb">
                     <div class="pico" style="color:var(--accent)"><svg viewBox="0 0 24 24">
                             <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -2173,16 +2915,14 @@
                     <h3 class="pname">Grab-ity</h3>
                     <p class="pdesc">2D puzzle platformer with innovative crane mechanics and physics-based gameplay.
                     </p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role
-                            here]</span></div>
-                    <a href="https://github.com/AJShin09/Grab-ity" target="_blank" class="plink">GitHub <svg
-                            viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
                 </div>
             </div>
 
-            <div class="pcard" data-cat="web">
+            <div class="pcard" data-cat="web" data-project="saalibrary" style="cursor:pointer;">
                 <div class="pthumb">
                     <div class="pico" style="color:var(--accent3)"><svg viewBox="0 0 24 24">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -2192,7 +2932,7 @@
                         <div class="p-preview-icon">📚</div>
                         <div class="p-preview-role">Full-Stack Developer</div>
                         <div class="p-preview-note">Digital library system with book management, search, and user
-                            authentication for educational institutions.</div>
+                            authentication.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2200,16 +2940,14 @@
                     <h3 class="pname">SAA-E-Library</h3>
                     <p class="pdesc">Digital library system for educational institutions with seamless book management
                         and access control.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role
-                            here]</span></div>
-                    <a href="https://github.com/AJShin09/SAA-E-Library" target="_blank" class="plink">GitHub <svg
-                            viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
                 </div>
             </div>
 
-            <div class="pcard" data-cat="web">
+            <div class="pcard" data-cat="web" data-project="soundscape" style="cursor:pointer;">
                 <div class="pthumb">
                     <div class="pico" style="color:var(--accent2)"><svg viewBox="0 0 24 24">
                             <path d="M9 18V5l12-2v13" />
@@ -2228,16 +2966,14 @@
                     <h3 class="pname">Soundscape</h3>
                     <p class="pdesc">Interactive music library with playlist management and audio streaming
                         capabilities.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role
-                            here]</span></div>
-                    <a href="https://github.com/AJShin09/Soundscape" target="_blank" class="plink">GitHub <svg
-                            viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
                 </div>
             </div>
 
-            <div class="pcard" data-cat="data">
+            <div class="pcard" data-cat="data" data-project="plibrary" style="cursor:pointer;">
                 <div class="pthumb">
                     <div class="pico" style="color:var(--accent)"><svg viewBox="0 0 24 24">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -2247,7 +2983,7 @@
                         <div class="p-preview-icon">🗄️</div>
                         <div class="p-preview-role">Backend Developer</div>
                         <div class="p-preview-note">Efficient resource management using advanced data structures —
-                            binary trees, hash maps, and custom indexing.</div>
+                            binary trees, hash maps.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2255,16 +2991,14 @@
                     <h3 class="pname">P.Library</h3>
                     <p class="pdesc">Custom library system using advanced data structures for efficient resource
                         management and retrieval.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role
-                            here]</span></div>
-                    <a href="https://github.com/AJShin09/P.Library" target="_blank" class="plink">GitHub <svg
-                            viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
                 </div>
             </div>
 
-            <div class="pcard" data-cat="web">
+            <div class="pcard" data-cat="web" data-project="yusisay" style="cursor:pointer;">
                 <div class="pthumb">
                     <div class="pico" style="color:var(--warn)"><svg viewBox="0 0 24 24">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -2276,7 +3010,7 @@
                         <div class="p-preview-icon">💬</div>
                         <div class="p-preview-role">Full-Stack Developer</div>
                         <div class="p-preview-note">Anonymous social platform with privacy-first design — no accounts,
-                            no tracking, just thoughts shared safely.</div>
+                            no tracking.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2284,12 +3018,50 @@
                     <h3 class="pname">Yusi-Say</h3>
                     <p class="pdesc">Anonymous social platform for sharing thoughts while maintaining complete user
                         privacy and anonymity.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--text2);">[Add your role
-                            here]</span></div>
-                    <a href="https://github.com/AJShin09/Yusi-Say" target="_blank" class="plink">GitHub <svg
-                            viewBox="0 0 24 24">
+                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
+                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
                             <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></a>
+                        </svg></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT DETAIL MODAL -->
+    <div class="pmodal-overlay" id="pmodalOverlay">
+        <div class="pmodal" id="pmodal">
+            <button class="pmodal-close" id="pmodalClose">✕ CLOSE</button>
+
+            <div class="pmodal-inner">
+                <!-- LEFT: Slideshow -->
+                <div class="pmodal-left">
+                    <div class="pmodal-slideshow" id="pmodalSlides">
+                        <!-- slides injected by JS -->
+                    </div>
+                    <div class="pmodal-slide-controls">
+                        <button class="slide-btn" id="slidePrev">◀</button>
+                        <span class="slide-counter" id="slideCounter">1 / 3</span>
+                        <button class="slide-btn" id="slideNext">▶</button>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Info -->
+                <div class="pmodal-right">
+                    <div class="pmodal-type" id="pmodalType"></div>
+                    <h2 class="pmodal-title" id="pmodalTitle"></h2>
+                    <div class="pmodal-role-badge" id="pmodalRole"></div>
+                    <p class="pmodal-desc" id="pmodalDesc"></p>
+
+                    <div class="pmodal-section-title">// Language</div>
+                    <div class="pmodal-tags" id="pmodalLangs"></div>
+
+                    <div class="pmodal-section-title">// Tech Stack</div>
+                    <div class="pmodal-stack" id="pmodalStack"></div>
+
+                    <div class="pmodal-section-title">// Key Features</div>
+                    <ul class="pmodal-features" id="pmodalFeatures"></ul>
+
+                    <div class="pmodal-links" id="pmodalLinks"></div>
                 </div>
             </div>
         </div>
@@ -2298,8 +3070,105 @@
     <!-- EXPERIENCE -->
     <div class="sdiv"></div>
     <div class="section reveal" id="experience">
-        <p class="stag">04 / Work History</p>
-        <h2 class="stitle">Work <span>Experience</span></h2>
+        <p class="stag">04 / Beyond Code</p>
+        <h2 class="stitle">Experience &amp; <span>Passions</span></h2>
+        <p
+            style="font-size:.82rem;color:var(--text2);margin-bottom:2.4rem;margin-top:-.8rem;max-width:560px;line-height:1.8;">
+            Beyond building systems, here's what drives me — the hands-on moments, creative pursuits, and interests that
+            shape who I am as an engineer.</p>
+
+        <div class="passion-grid">
+            <div class="passion-card passion-large">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">Add your photo here</div>
+                        <div class="placeholder-sub">Recommended: 800×500px</div>
+                    </div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">⚡ Hardware Tinkering</div>
+                    <div class="passion-caption">Hands-on with circuits, breadboards, and embedded systems</div>
+                </div>
+            </div>
+
+            <div class="passion-card">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">Add your photo here</div>
+                        <div class="placeholder-sub">Recommended: 400×400px</div>
+                    </div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">🛡️ Cybersecurity</div>
+                    <div class="passion-caption">Ethical hacking, CTF challenges & network defense</div>
+                </div>
+            </div>
+
+            <div class="passion-card">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">Add your photo here</div>
+                        <div class="placeholder-sub">Recommended: 400×400px</div>
+                    </div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">🎮 Game Dev</div>
+                    <div class="passion-caption">Designing mechanics and building worlds from scratch</div>
+                </div>
+            </div>
+
+            <div class="passion-card">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">Add your photo here</div>
+                        <div class="placeholder-sub">Recommended: 400×400px</div>
+                    </div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">🌱 IoT & Agriculture</div>
+                    <div class="passion-caption">Connecting sensors to the real world with purpose</div>
+                </div>
+            </div>
+
+            <div class="passion-card">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">📷</div>
+                        <div class="placeholder-text">Add your photo here</div>
+                        <div class="placeholder-sub">Recommended: 400×400px</div>
+                    </div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">🎵 Music</div>
+                    <div class="passion-caption">Finding rhythm in the noise</div>
+                </div>
+            </div>
+
+            <div class="passion-card passion-video">
+                <div class="passion-img-wrap">
+                    <div class="passion-placeholder">
+                        <div class="placeholder-icon">🎬</div>
+                        <div class="placeholder-text">Add your video here</div>
+                        <div class="placeholder-sub">MP4 / YouTube embed · 800×450px</div>
+                    </div>
+                    <div class="passion-play-badge">▶ VIDEO</div>
+                </div>
+                <div class="passion-overlay">
+                    <div class="passion-tag">🔭 Project Showcase</div>
+                    <div class="passion-caption">A walkthrough of what I build and why it matters</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Experience subsection -->
+        <div class="work-exp-header">
+            <div class="stag" style="margin-bottom:.55rem;">// Professional Background</div>
+            <h3 class="work-exp-title">Work <span>History</span></h3>
+        </div>
         <div class="etl">
             <div class="eitem">
                 <div class="edate">Jun 2024 — Dec 2024</div>
@@ -2488,7 +3357,7 @@
            REALISTIC ESP32-DEVKITC — EXPLODABLE WITH SVG LABELS
         ═══════════════════════════════════════════════════════ */
         (function () {
-            const container = document.getElementById('heroRight');
+            const container = document.querySelector('.hero-canvas-bg');
             const canvas = document.getElementById('three-canvas');
             const labelSVG = document.getElementById('esp-labels-svg');
             const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
@@ -2906,6 +3775,8 @@
             }
 
             /* ── ORBIT CONTROLS ── */
+            // Re-enable pointer events on canvas so drag/scroll work (CSS sets none to let buttons through)
+            canvas.style.pointerEvents = 'all';
             canvas.addEventListener('mousedown', e => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
             window.addEventListener('mouseup', () => isDragging = false);
             window.addEventListener('mousemove', e => {
@@ -3008,6 +3879,318 @@
 
             window.addEventListener('resize', resize);
             document.getElementById('themeToggle').addEventListener('click', () => setTimeout(syncTheme, 80));
+        })();
+
+        /* PROJECT MODAL DATA & LOGIC */
+        const projectData = {
+            nurtura: {
+                type: 'IoT · Smart Agriculture',
+                title: 'Nurtura',
+                role: 'Hardware Specialist',
+                desc: 'Nurtura is an automated plant care system built on the ESP32 microcontroller. It reads soil moisture, ambient temperature, and humidity in real-time, then triggers watering pumps and lights automatically. Data is pushed over MQTT to a cloud dashboard for remote monitoring and alert notifications.',
+                languages: ['C / C++', 'Python', 'JavaScript'],
+                stack: [
+                    { icon: '⚙️', name: 'ESP32', role: 'Microcontroller' },
+                    { icon: '📡', name: 'MQTT', role: 'Messaging Protocol' },
+                    { icon: '☁️', name: 'Node-RED', role: 'Dashboard / Cloud' },
+                    { icon: '🌡️', name: 'DHT22 / Capacitive Sensor', role: 'Sensors' },
+                    { icon: '🔌', name: 'FreeRTOS', role: 'Task Scheduler' },
+                    { icon: '📊', name: 'InfluxDB', role: 'Time-series Data' },
+                ],
+                features: [
+                    'Real-time soil moisture, temperature & humidity monitoring',
+                    'Automated pump & grow light control based on sensor thresholds',
+                    'MQTT-based cloud dashboard with live data charts',
+                    'Push alert notifications when conditions are out of range',
+                    'Multi-sensor support on a single ESP32 with FreeRTOS tasks',
+                ],
+                links: [
+                    { label: 'View Project', url: '#' },
+                ],
+                slides: [
+                    { icon: '🌱', label: 'System Overview', sub: 'Add circuit diagram / schematic' },
+                    { icon: '📊', label: 'Dashboard Screenshot', sub: 'Add Node-RED / cloud dashboard UI' },
+                    { icon: '🔌', label: 'Hardware Setup', sub: 'Add photo of assembled hardware' },
+                ]
+            },
+            grabity: {
+                type: 'Game Development',
+                title: 'Grab-ity',
+                role: 'Solo Developer — Crane Master',
+                desc: 'Grab-ity is a single-player 2D puzzle game set in an industrial Cyberpunk port. Players control both a character and a crane claw simultaneously to solve physics-based puzzles across 6 progressively challenging levels: The Docks, Warehouse, Cargo Bay, Cyber Vaults, Machinery, and The Escape. Playable in browser — landscape mode required.',
+                languages: ['C#', 'GDScript'],
+                stack: [
+                    { icon: '🎮', name: 'Game Engine', role: 'Core Runtime' },
+                    { icon: '⚡', name: 'Custom Physics', role: 'Crane & Claw Mechanics' },
+                    { icon: '🎨', name: 'Pixel Art', role: 'Sprites & Tilesets' },
+                    { icon: '🔊', name: 'Audio System', role: 'Music & SFX' },
+                    { icon: '🌐', name: 'Vercel', role: 'Web Deployment' },
+                    { icon: '🕹️', name: 'Dual Controls', role: 'WASD + Arrow Keys' },
+                ],
+                features: [
+                    '6 unlockable levels set in a Cyberpunk industrial port',
+                    'Dual-control: character (WASD / W to jump) + crane (Arrow Keys)',
+                    'Crane claw open/close with SPACEBAR — grab and stack cargo',
+                    'Progressive level lock system with full level select screen',
+                    'Settings panel: music volume, SFX levels, screen shake toggle',
+                    'Landscape-only layout with auto rotate prompt on mobile',
+                ],
+                links: [
+                    { label: 'Play Live', url: 'https://grab-ity.vercel.app/' },
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/Grab-ity' },
+                ],
+                media: [
+                    { type: 'image', src: 'src/project-images/grab-ity.png', label: 'Title Screen' },
+                    { type: 'image', src: 'src/project-images/grab-ity-1.png', label: 'Level Select' },
+                    { type: 'image', src: 'src/project-images/grab-ity-2.png', label: 'Gameplay' },
+                    { type: 'image', src: 'src/project-images/grab-ity-3.png', label: 'Level Detail' },
+                    { type: 'video', src: 'src/project-videos/grab-ity.mp4', label: 'Gameplay Video' },
+                ]
+            },
+            saalibrary: {
+                type: 'Web Application',
+                title: 'SAA-E-Library',
+                role: 'Full-Stack Developer',
+                desc: 'SAA-E-Library is a digital library management system built for educational institutions. It supports book cataloging, borrower management, and advanced search. Authentication ensures secure access for librarians and students, with role-based permissions.',
+                languages: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'],
+                stack: [
+                    { icon: '🌐', name: 'HTML / CSS / JS', role: 'Frontend' },
+                    { icon: '🐘', name: 'PHP', role: 'Backend Logic' },
+                    { icon: '🗄️', name: 'MySQL', role: 'Database' },
+                    { icon: '🔑', name: 'Session Auth', role: 'Authentication' },
+                ],
+                features: [
+                    'Book catalog with CRUD operations',
+                    'Advanced search and filter by genre, author, availability',
+                    'User authentication with librarian and student roles',
+                    'Borrow & return tracking with due-date alerts',
+                    'Admin dashboard with borrow statistics',
+                ],
+                links: [
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/SAA-E-Library' },
+                ],
+                slides: [
+                    { icon: '📚', label: 'Book Catalog View', sub: 'Add screenshot of catalog page' },
+                    { icon: '🔑', label: 'Login / Auth Screen', sub: 'Add login page screenshot' },
+                    { icon: '📊', label: 'Admin Dashboard', sub: 'Add dashboard screenshot' },
+                ]
+            },
+            soundscape: {
+                type: 'Media Platform',
+                title: 'Soundscape',
+                role: 'Frontend Developer',
+                desc: 'Soundscape is a music streaming web application with playlist management, audio controls, and a clean responsive UI. It supports local media or API-fetched tracks and provides an immersive listening experience with waveform visualization.',
+                languages: ['HTML5', 'CSS3', 'JavaScript'],
+                stack: [
+                    { icon: '⚡', name: 'Vanilla JS', role: 'Core Logic' },
+                    { icon: '🎵', name: 'Web Audio API', role: 'Audio Processing' },
+                    { icon: '🎨', name: 'CSS Animations', role: 'UI / Waveform' },
+                    { icon: '🌐', name: 'REST API', role: 'Track Fetching' },
+                ],
+                features: [
+                    'Responsive audio player with play/pause/skip controls',
+                    'Playlist creation and queue management',
+                    'Waveform or visualizer animation synced to playback',
+                    'Search and filter tracks by title or artist',
+                    'Local storage for saved playlists',
+                ],
+                links: [
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/soundscape' },
+                ],
+                slides: [
+                    { icon: '🎵', label: 'Player Interface', sub: 'Add screenshot of player UI' },
+                    { icon: '📋', label: 'Playlist View', sub: 'Add playlist management screenshot' },
+                    { icon: '🌊', label: 'Waveform Visualizer', sub: 'Add visualizer screenshot / GIF' },
+                ]
+            },
+            plibrary: {
+                type: 'Data Structures',
+                title: 'P.Library',
+                role: 'Full-Stack Developer',
+                desc: 'P.Library is a console-based library system that implements advanced data structures for fast resource lookup and management. It uses binary search trees for catalog ordering, hash maps for O(1) lookups, and custom linked lists for borrow queue management.',
+                languages: ['C', 'C++'],
+                stack: [
+                    { icon: '🌲', name: 'Binary Search Tree', role: 'Catalog Sorting' },
+                    { icon: '#️⃣', name: 'Hash Map', role: 'O(1) Lookups' },
+                    { icon: '🔗', name: 'Linked List', role: 'Borrow Queue' },
+                    { icon: '⚙️', name: 'GCC / G++', role: 'Compiler' },
+                ],
+                features: [
+                    'BST-based book catalog for sorted insertion and retrieval',
+                    'Hash map implementation for constant-time search',
+                    'Linked-list borrow queue with priority support',
+                    'File I/O for persistent data storage',
+                    'CLI interface with menu-driven navigation',
+                ],
+                links: [
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/P.Library' },
+                ],
+                slides: [
+                    { icon: '🌲', label: 'Data Structure Diagram', sub: 'Add BST / hash map diagram' },
+                    { icon: '💻', label: 'CLI Interface', sub: 'Add terminal screenshot' },
+                    { icon: '📊', label: 'Performance Benchmarks', sub: 'Add benchmark chart' },
+                ]
+            },
+            yusisay: {
+                type: 'Social Platform',
+                title: 'Yusi-Say',
+                role: 'Full-Stack Developer',
+                desc: 'Yusi-Say is an anonymous social platform designed with a privacy-first philosophy. No accounts, no tracking, no persistent identity — users post thoughts that expire after a set time. The system uses ephemeral session IDs so content is never tied to a real user.',
+                languages: ['HTML5', 'CSS3', 'JavaScript', 'Node.js', 'SQL'],
+                stack: [
+                    { icon: '🟩', name: 'Node.js / Express', role: 'Backend Server' },
+                    { icon: '🗄️', name: 'SQLite / PostgreSQL', role: 'Database' },
+                    { icon: '🔐', name: 'Ephemeral Sessions', role: 'Anonymity Layer' },
+                    { icon: '🌐', name: 'Vanilla JS', role: 'Frontend' },
+                ],
+                features: [
+                    'No account required — fully anonymous posting',
+                    'Posts expire automatically after a configurable TTL',
+                    'Ephemeral session IDs — no user tracking',
+                    'Real-time feed with WebSocket or polling',
+                    'Content moderation flags without exposing identity',
+                ],
+                links: [
+                    { label: 'GitHub', url: 'https://github.com/AJShin09/Yusi-Say' },
+                ],
+                slides: [
+                    { icon: '💬', label: 'Main Feed View', sub: 'Add screenshot of post feed' },
+                    { icon: '🔐', label: 'Privacy Architecture', sub: 'Add system diagram' },
+                    { icon: '📱', label: 'Mobile Responsive', sub: 'Add mobile screenshot' },
+                ]
+            }
+        };
+
+        (function () {
+            const overlay = document.getElementById('pmodalOverlay');
+            const modal = document.getElementById('pmodal');
+            const closeBtn = document.getElementById('pmodalClose');
+            let currentSlide = 0;
+            let totalSlides = 0;
+
+            function openModal(key) {
+                const d = projectData[key];
+                if (!d) return;
+
+                document.getElementById('pmodalType').textContent = d.type;
+                document.getElementById('pmodalTitle').textContent = d.title;
+                document.getElementById('pmodalRole').textContent = 'Role: ' + d.role;
+                document.getElementById('pmodalDesc').textContent = d.desc;
+
+                // Languages
+                const langsEl = document.getElementById('pmodalLangs');
+                langsEl.innerHTML = d.languages.map(l => `<span class="pmodal-tag">${l}</span>`).join('');
+
+                // Stack
+                const stackEl = document.getElementById('pmodalStack');
+                stackEl.innerHTML = d.stack.map(s =>
+                    `<div class="stack-item"><div class="stack-ico">${s.icon}</div><div><div class="stack-name">${s.name}</div><span class="stack-role">${s.role}</span></div></div>`
+                ).join('');
+
+                // Features
+                const featEl = document.getElementById('pmodalFeatures');
+                featEl.innerHTML = d.features.map(f => `<li>${f}</li>`).join('');
+
+                // Links
+                const linksEl = document.getElementById('pmodalLinks');
+                linksEl.innerHTML = d.links.map(l =>
+                    `<a href="${l.url}" target="_blank" class="pmodal-link">${l.label} →</a>`
+                ).join('');
+
+                // Slides — supports both real media and placeholder slides
+                const slidesEl = document.getElementById('pmodalSlides');
+                const items = d.media || d.slides;
+                totalSlides = items.length;
+
+                slidesEl.innerHTML = items.map((s, i) => {
+                    const activeClass = i === 0 ? 'active' : '';
+                    // Real media slide
+                    if (s.type === 'video') {
+                        return `<div class="pmodal-slide ${activeClass}">
+                            <div class="pslide-media">
+                                <div class="pslide-label-bar">
+                                    <span class="pslide-num-badge">${i + 1} / ${totalSlides}</span>
+                                    <span class="pslide-caption">${s.label}</span>
+                                </div>
+                                <video class="pslide-video" src="${s.src}" controls muted loop playsinline
+                                    style="width:100%;height:100%;object-fit:contain;display:block;background:#000;">
+                                </video>
+                            </div>
+                        </div>`;
+                    } else if (s.type === 'image') {
+                        return `<div class="pmodal-slide ${activeClass}">
+                            <div class="pslide-media">
+                                <div class="pslide-label-bar">
+                                    <span class="pslide-num-badge">${i + 1} / ${totalSlides}</span>
+                                    <span class="pslide-caption">${s.label}</span>
+                                </div>
+                                <img src="${s.src}" alt="${s.label}"
+                                    style="width:100%;height:100%;object-fit:cover;display:block;">
+                            </div>
+                        </div>`;
+                    }
+                    // Placeholder slide (no type / old format)
+                    return `<div class="pmodal-slide ${activeClass}">
+                        <div class="pmodal-slide-placeholder">
+                            <div class="pslide-num">SLIDE ${i + 1} / ${totalSlides}</div>
+                            <div class="pslide-ph-icon">${s.icon || '📷'}</div>
+                            <div class="pslide-ph-label">${s.label}<span>${s.sub || ''}</span></div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                currentSlide = 0;
+                updateSlideCounter();
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function pauseActiveVideo() {
+                const activeSlide = document.querySelector('.pmodal-slide.active video');
+                if (activeSlide) activeSlide.pause();
+            }
+
+            function closeModal() {
+                pauseActiveVideo();
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function updateSlideCounter() {
+                pauseActiveVideo();
+                document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+                document.querySelectorAll('.pmodal-slide').forEach((s, i) => {
+                    s.classList.toggle('active', i === currentSlide);
+                });
+            }
+
+            document.getElementById('slideNext').addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlideCounter();
+            });
+
+            document.getElementById('slidePrev').addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateSlideCounter();
+            });
+
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+            document.querySelectorAll('.pcard[data-project]').forEach(card => {
+                // Auto-inject role from projectData into card face
+                const key = card.dataset.project;
+                const data = projectData[key];
+                if (data) {
+                    const roleSpan = card.querySelector('.p-role span');
+                    if (roleSpan) roleSpan.textContent = data.role;
+                }
+                card.addEventListener('click', e => {
+                    if (e.target.closest('a[href]')) return;
+                    openModal(key);
+                });
+            });
         })();
 
         /* THEME */
