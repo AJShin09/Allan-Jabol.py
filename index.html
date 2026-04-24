@@ -81,6 +81,44 @@
             line-height: 1.6;
             overflow-x: hidden;
             transition: background var(--t), color var(--t);
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M4 2 L4 16 L8 12 L11 18 L13 17 L10 11 L16 11 Z' fill='%2300DCFF' stroke='%23020c16' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
+        }
+
+        a,
+        button,
+        [style*='cursor:pointer'],
+        [style*='cursor: pointer'],
+        .pcard,
+        .passion-card,
+        .toggle,
+        .slide-btn,
+        .pcat-btn,
+        .pmodal-close,
+        .bp,
+        .bo,
+        .mbtn,
+        .exp-photo-item {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M4 2 L4 16 L8 12 L11 18 L13 17 L10 11 L16 11 Z' fill='%2300FF94' stroke='%23020c16' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer !important;
+        }
+
+        [data-theme="light"] body,
+        [data-theme="light"] {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M4 2 L4 16 L8 12 L11 18 L13 17 L10 11 L16 11 Z' fill='%23005fb8' stroke='%23f0f6fc' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
+        }
+
+        [data-theme="light"] a,
+        [data-theme="light"] button,
+        [data-theme="light"] .pcard,
+        [data-theme="light"] .passion-card,
+        [data-theme="light"] .toggle,
+        [data-theme="light"] .slide-btn,
+        [data-theme="light"] .pcat-btn,
+        [data-theme="light"] .pmodal-close,
+        [data-theme="light"] .bp,
+        [data-theme="light"] .bo,
+        [data-theme="light"] .mbtn,
+        [data-theme="light"] .exp-photo-item {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M4 2 L4 16 L8 12 L11 18 L13 17 L10 11 L16 11 Z' fill='%2300876a' stroke='%23f0f6fc' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer !important;
         }
 
         body::before {
@@ -1236,14 +1274,17 @@
         }
 
         .pthumb {
-            height: 145px;
+            height: 0;
+            padding-bottom: calc(270 / 800 * 100%);
             background: var(--bg2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             overflow: hidden;
             cursor: default;
+        }
+
+        .pthumb .p-preview {
+            position: absolute;
+            inset: 0;
         }
 
         .pthumb::before {
@@ -1264,6 +1305,11 @@
             background: radial-gradient(circle at center, rgba(0, 255, 148, .1) 0%, transparent 70%);
         }
 
+        /* GIF HOVER */
+        .pcard:hover .pthumb-gif {
+            opacity: 1 !important;
+        }
+
         /* HOVER PREVIEW PANEL */
         .p-preview {
             position: absolute;
@@ -1281,7 +1327,7 @@
         }
 
         .pcard:hover .p-preview {
-            opacity: 1;
+            opacity: 0.5;
         }
 
         .p-preview-icon {
@@ -1908,7 +1954,8 @@
 
         .pmodal-slideshow {
             flex: 1;
-            min-height: 340px;
+            min-height: 400px;
+            height: 400px;
             position: relative;
             overflow: hidden;
         }
@@ -1921,11 +1968,13 @@
             justify-content: center;
             background: var(--surface);
             opacity: 0;
+            pointer-events: none;
             transition: opacity .4s;
         }
 
         .pmodal-slide.active {
             opacity: 1;
+            pointer-events: all;
         }
 
         .pmodal-slide-placeholder {
@@ -2097,6 +2146,24 @@
         .stack-ico {
             font-size: .95rem;
             line-height: 1;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .stack-ico svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: .85;
         }
 
         .stack-name {
@@ -2167,6 +2234,71 @@
             background: var(--accent);
             color: #000;
             border-color: var(--accent);
+        }
+
+        /* EXPERIENCE PHOTO GRID */
+        .exp-photo-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: auto auto;
+            gap: .85rem;
+            margin-bottom: 4rem;
+        }
+
+        .exp-photo-item {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: border-color .3s, transform .3s, box-shadow .3s;
+        }
+
+        .exp-photo-item:hover {
+            border-color: var(--border2);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 220, 255, .08);
+        }
+
+        /* Portrait images: W400 H533 → aspect ratio 400/533 */
+        .exp-portrait {
+            aspect-ratio: 400 / 533;
+        }
+
+        /* Row 2: 7 is W433 H325, 8 is W433 H235 — they sit side-by-side spanning all 6 columns */
+        .exp-landscape-7 {
+            grid-column: 1 / 4;
+            aspect-ratio: 433 / 325;
+        }
+
+        .exp-landscape-8 {
+            grid-column: 4 / 7;
+            aspect-ratio: 433 / 235;
+        }
+
+        @media(max-width:1100px) {
+            .exp-photo-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .exp-landscape-7 {
+                grid-column: 1 / 2;
+            }
+
+            .exp-landscape-8 {
+                grid-column: 2 / 4;
+            }
+        }
+
+        @media(max-width:768px) {
+            .exp-photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .exp-landscape-7 {
+                grid-column: 1 / 2;
+            }
+
+            .exp-landscape-8 {
+                grid-column: 2 / 3;
+            }
         }
 
         /* PASSION GALLERY */
@@ -2625,6 +2757,366 @@
             color: var(--text3);
             opacity: .5;
         }
+
+        /* ── TECH STACK SECTION ── */
+        .ts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .ts-group {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .ts-group-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            padding-bottom: .55rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ts-group-label::before {
+            content: '//';
+            color: var(--text3);
+        }
+
+        .ts-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .55rem;
+        }
+
+        .ts-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .68rem;
+            letter-spacing: .06em;
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: .38rem .85rem;
+            transition: all .22s;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+        }
+
+        .ts-pill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--ag);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .22s;
+        }
+
+        .ts-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .ts-pill:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ts-pill span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ts-pill .ts-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            box-shadow: 0 0 5px var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .ts-group:nth-child(2) .ts-pill .ts-dot {
+            background: var(--accent2);
+            box-shadow: 0 0 5px var(--accent2);
+        }
+
+        .ts-group:nth-child(2) .ts-pill:hover {
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .ts-group:nth-child(2) .ts-pill::before {
+            background: var(--a2g);
+        }
+
+        .ts-group:nth-child(3) .ts-pill .ts-dot {
+            background: var(--accent3);
+            box-shadow: 0 0 5px var(--accent3);
+        }
+
+        .ts-group:nth-child(3) .ts-pill:hover {
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .ts-group:nth-child(3) .ts-pill::before {
+            background: var(--a3g);
+        }
+
+        .ts-group:nth-child(4) .ts-pill .ts-dot {
+            background: var(--warn);
+            box-shadow: 0 0 5px var(--warn);
+        }
+
+        .ts-group:nth-child(4) .ts-pill:hover {
+            border-color: var(--warn);
+            color: var(--warn);
+        }
+
+        .ts-group:nth-child(4) .ts-pill::before {
+            background: var(--warnG);
+        }
+
+        .ts-group-label.lang {
+            color: var(--accent);
+        }
+
+        .ts-group-label.frame {
+            color: var(--accent2);
+        }
+
+        .ts-group-label.db {
+            color: var(--accent3);
+        }
+
+        .ts-group-label.tools {
+            color: var(--warn);
+        }
+
+        /* ── WEBINAR / CERTIFICATES SECTION ── */
+        .webinar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.1rem;
+        }
+
+        .webinar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all .3s;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            cursor: pointer;
+        }
+
+        .webinar-card:hover {
+            border-color: var(--accent2);
+            transform: translateY(-4px);
+            box-shadow: 0 0 28px rgba(0, 255, 148, .12);
+        }
+
+        .webinar-card:hover .webinar-overlay {
+            opacity: 1;
+        }
+
+        .webinar-img-wrap {
+            width: 100%;
+            aspect-ratio: 433 / 300;
+            overflow: hidden;
+            background: var(--bg2);
+            position: relative;
+        }
+
+        .webinar-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .4s;
+        }
+
+        .webinar-card:hover .webinar-img-wrap img {
+            transform: scale(1.04);
+        }
+
+        .webinar-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(2, 12, 22, .92) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity .3s;
+            display: flex;
+            align-items: flex-end;
+            padding: .85rem;
+        }
+
+        .webinar-view {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .webinar-view::before {
+            content: '▶';
+            font-size: .48rem;
+        }
+
+        .webinar-foot {
+            padding: .7rem .9rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .webinar-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .56rem;
+            letter-spacing: .1em;
+            color: var(--text3);
+        }
+
+        .webinar-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .5rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            border: 1px solid var(--a2g);
+            background: var(--a2g);
+            padding: .12rem .4rem;
+        }
+
+        /* Lightbox */
+        .wlb-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 8, 18, .95);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s;
+            backdrop-filter: blur(8px);
+        }
+
+        .wlb-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .wlb-inner {
+            position: relative;
+            max-width: 860px;
+            width: 90vw;
+        }
+
+        .wlb-inner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid var(--border2);
+        }
+
+        .wlb-close {
+            position: absolute;
+            top: -2.2rem;
+            right: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .14em;
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color .2s;
+        }
+
+        .wlb-close:hover {
+            color: var(--accent);
+        }
+
+        .wlb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(2, 12, 22, .7);
+            border: 1px solid var(--border2);
+            color: var(--accent);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .9rem;
+            width: 34px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .wlb-nav:hover {
+            background: var(--ag);
+            border-color: var(--accent);
+        }
+
+        .wlb-prev {
+            left: -44px;
+        }
+
+        .wlb-next {
+            right: -44px;
+        }
+
+        .wlb-counter {
+            position: absolute;
+            bottom: -1.8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .58rem;
+            color: var(--text3);
+            letter-spacing: .1em;
+        }
+
+        @media(max-width:1100px) {
+            .webinar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:768px) {
+            .webinar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .wlb-prev {
+                left: -36px;
+            }
+
+            .wlb-next {
+                right: -36px;
+            }
+        }
     </style>
 </head>
 
@@ -2644,6 +3136,8 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#education">Education</a></li>
+                <li><a href="#techstack">Tech Stack</a></li>
+                <li><a href="#webinars">Certificates</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-right">
@@ -2872,17 +3366,13 @@
         <div class="pgrid">
             <!-- NURTURA — FEATURED IoT -->
             <div class="pcard featured" data-cat="iot" data-project="nurtura" style="cursor:pointer;">
-                <div class="featured-badge">⚡ Featured IoT</div>
+                <div class="featured-badge">Featured IoT</div>
                 <div class="pthumb">
-                    <div class="pico"><svg viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg></div>
+                    <img class="pthumb-static" src="src/Card Thumbnail/Nurtura_Cover.png" alt="Nurtura"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+                    <img class="pthumb-gif" src="src/Nurtura/gif/Nurtura.gif" alt="Nurtura GIF"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s;">
                     <div class="p-preview">
-                        <div class="p-preview-icon">🌱</div>
-                        <div class="p-preview-role">IoT · Smart Agriculture</div>
-                        <div class="p-preview-note">Automated plant monitoring with ESP32, soil sensors, and cloud
-                            dashboard. Real-time alerts &amp; remote control.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2899,15 +3389,11 @@
 
             <div class="pcard" data-cat="game" data-project="grabity" style="cursor:pointer;">
                 <div class="pthumb">
-                    <div class="pico" style="color:var(--accent)"><svg viewBox="0 0 24 24">
-                            <rect x="2" y="3" width="20" height="14" rx="2" />
-                            <path d="m8 21 4-4 4 4" />
-                        </svg></div>
+                    <img class="pthumb-static" src="src/Card Thumbnail/Grab-ity_Cover.png" alt="Grab-ity"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+                    <img class="pthumb-gif" src="src/Grab-ity/gif/Grab-ity.gif" alt="Grab-ity GIF"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s;">
                     <div class="p-preview">
-                        <div class="p-preview-icon">🎮</div>
-                        <div class="p-preview-role">Game Developer</div>
-                        <div class="p-preview-note">2D puzzle platformer — physics-based crane mechanics built with
-                            custom game engine logic.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2922,43 +3408,13 @@
                 </div>
             </div>
 
-            <div class="pcard" data-cat="web" data-project="saalibrary" style="cursor:pointer;">
-                <div class="pthumb">
-                    <div class="pico" style="color:var(--accent3)"><svg viewBox="0 0 24 24">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                        </svg></div>
-                    <div class="p-preview">
-                        <div class="p-preview-icon">📚</div>
-                        <div class="p-preview-role">Full-Stack Developer</div>
-                        <div class="p-preview-note">Digital library system with book management, search, and user
-                            authentication.</div>
-                    </div>
-                </div>
-                <div class="pbody">
-                    <p class="ptype">Web Application</p>
-                    <h3 class="pname">SAA-E-Library</h3>
-                    <p class="pdesc">Digital library system for educational institutions with seamless book management
-                        and access control.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
-                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
-                            <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></span>
-                </div>
-            </div>
-
             <div class="pcard" data-cat="web" data-project="soundscape" style="cursor:pointer;">
                 <div class="pthumb">
-                    <div class="pico" style="color:var(--accent2)"><svg viewBox="0 0 24 24">
-                            <path d="M9 18V5l12-2v13" />
-                            <circle cx="6" cy="18" r="3" />
-                            <circle cx="18" cy="16" r="3" />
-                        </svg></div>
+                    <img class="pthumb-static" src="src/Card Thumbnail/Soundscape_Cover.png" alt="Soundscape"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+                    <img class="pthumb-gif" src="src/Soundscape/gif/Soundscape.gif" alt="Soundscape GIF"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s;">
                     <div class="p-preview">
-                        <div class="p-preview-icon">🎵</div>
-                        <div class="p-preview-role">Frontend Developer</div>
-                        <div class="p-preview-note">Interactive music streaming platform with playlist management and
-                            responsive audio controls.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2975,15 +3431,11 @@
 
             <div class="pcard" data-cat="web" data-project="butika" style="cursor:pointer;">
                 <div class="pthumb">
-                    <div class="pico" style="color:var(--accent2)"><svg viewBox="0 0 24 24">
-                            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-                            <path d="M12 6v6l4 2" />
-                        </svg></div>
+                    <img class="pthumb-static" src="src/Card Thumbnail/Buti-Ka_Cover.png" alt="Buti-Ka"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+                    <img class="pthumb-gif" src="src/Buti-Ka/gif/Buti-Ka.gif" alt="Buti-Ka GIF"
+                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s;">
                     <div class="p-preview">
-                        <div class="p-preview-icon">🌸</div>
-                        <div class="p-preview-role">Full-Stack Developer</div>
-                        <div class="p-preview-note">Filipino wellness app for daily mood tracking, habit building, and
-                            self-care routines.</div>
                     </div>
                 </div>
                 <div class="pbody">
@@ -2998,32 +3450,6 @@
                 </div>
             </div>
 
-            <div class="pcard" data-cat="web" data-project="yusisay" style="cursor:pointer;">
-                <div class="pthumb">
-                    <div class="pico" style="color:var(--warn)"><svg viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg></div>
-                    <div class="p-preview">
-                        <div class="p-preview-icon">💬</div>
-                        <div class="p-preview-role">Full-Stack Developer</div>
-                        <div class="p-preview-note">Anonymous social platform with privacy-first design — no accounts,
-                            no tracking.</div>
-                    </div>
-                </div>
-                <div class="pbody">
-                    <p class="ptype">Social Platform</p>
-                    <h3 class="pname">Yusi-Say</h3>
-                    <p class="pdesc">Anonymous social platform for sharing thoughts while maintaining complete user
-                        privacy and anonymity.</p>
-                    <div class="p-role"><strong>Role:</strong> <span style="color:var(--accent3);">—</span></div>
-                    <span class="plink plink-hint">Click to explore <svg viewBox="0 0 24 24">
-                            <path d="M7 17L17 7M7 7h10v10" />
-                        </svg></span>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -3077,90 +3503,40 @@
             Beyond building systems, here's what drives me — the hands-on moments, creative pursuits, and interests that
             shape who I am as an engineer.</p>
 
-        <div class="passion-grid">
-            <div class="passion-card passion-large">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div class="placeholder-text">Add your photo here</div>
-                        <div class="placeholder-sub">Recommended: 800×500px</div>
-                    </div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">⚡ Hardware Tinkering</div>
-                    <div class="passion-caption">Hands-on with circuits, breadboards, and embedded systems</div>
-                </div>
+        <div class="exp-photo-grid">
+            <!-- Row 1: Experience_1 to Experience_6 (W400 H533 each) -->
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_1.png" alt="Experience 1"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-
-            <div class="passion-card">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div class="placeholder-text">Add your photo here</div>
-                        <div class="placeholder-sub">Recommended: 400×400px</div>
-                    </div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">🛡️ Cybersecurity</div>
-                    <div class="passion-caption">Ethical hacking, CTF challenges & network defense</div>
-                </div>
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_2.png" alt="Experience 2"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-
-            <div class="passion-card">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div class="placeholder-text">Add your photo here</div>
-                        <div class="placeholder-sub">Recommended: 400×400px</div>
-                    </div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">🎮 Game Dev</div>
-                    <div class="passion-caption">Designing mechanics and building worlds from scratch</div>
-                </div>
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_3.png" alt="Experience 3"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-
-            <div class="passion-card">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div class="placeholder-text">Add your photo here</div>
-                        <div class="placeholder-sub">Recommended: 400×400px</div>
-                    </div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">🌱 IoT & Agriculture</div>
-                    <div class="passion-caption">Connecting sensors to the real world with purpose</div>
-                </div>
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_4.png" alt="Experience 4"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-
-            <div class="passion-card">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">📷</div>
-                        <div class="placeholder-text">Add your photo here</div>
-                        <div class="placeholder-sub">Recommended: 400×400px</div>
-                    </div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">🎵 Music</div>
-                    <div class="passion-caption">Finding rhythm in the noise</div>
-                </div>
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_5.png" alt="Experience 5"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-
-            <div class="passion-card passion-video">
-                <div class="passion-img-wrap">
-                    <div class="passion-placeholder">
-                        <div class="placeholder-icon">🎬</div>
-                        <div class="placeholder-text">Add your video here</div>
-                        <div class="placeholder-sub">MP4 / YouTube embed · 800×450px</div>
-                    </div>
-                    <div class="passion-play-badge">▶ VIDEO</div>
-                </div>
-                <div class="passion-overlay">
-                    <div class="passion-tag">🔭 Project Showcase</div>
-                    <div class="passion-caption">A walkthrough of what I build and why it matters</div>
-                </div>
+            <div class="exp-photo-item exp-portrait">
+                <img src="src/Experience/img/Experience_6.png" alt="Experience 6"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <!-- Row 2: Experience_7 (W433 H325) and Experience_8 (W433 H235) -->
+            <div class="exp-photo-item exp-landscape-7">
+                <img src="src/Experience/img/Experience_7.png" alt="Experience 7"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div class="exp-photo-item exp-landscape-8">
+                <img src="src/Experience/img/Experience_8.png" alt="Experience 8"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
         </div>
 
@@ -3255,10 +3631,191 @@
         </div>
     </div>
 
+    <!-- TECH STACK -->
+    <div class="sdiv"></div>
+    <div class="section reveal" id="techstack">
+        <p class="stag">07 / Arsenal</p>
+        <h2 class="stitle">Tech <span>Stack</span></h2>
+        <div class="ts-grid">
+
+            <div class="ts-group">
+                <div class="ts-group-label lang">Languages</div>
+                <div class="ts-pills">
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>PHP</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>JavaScript</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>TypeScript</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>C</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>C++</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>C#</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>Java</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>SQL</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>VB.NET</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ts-group">
+                <div class="ts-group-label frame">Frameworks</div>
+                <div class="ts-pills">
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>Laravel</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>React</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>Node.js</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ts-group">
+                <div class="ts-group-label db">Databases</div>
+                <div class="ts-pills">
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>MySQL</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>SQLite</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ts-group">
+                <div class="ts-group-label tools">Tools</div>
+                <div class="ts-pills">
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>Git</span>
+                    </div>
+                    <div class="ts-pill">
+                        <div class="ts-dot"></div><span>Vite</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- WEBINARS / CERTIFICATES -->
+    <div class="sdiv"></div>
+    <div class="section reveal" id="webinars">
+        <p class="stag">08 / Credentials</p>
+        <h2 class="stitle">Webinars &amp; <span>Certificates</span></h2>
+        <div class="webinar-grid">
+
+            <div class="webinar-card" onclick="openLightbox(0)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_1.png" alt="Webinar Certificate 1" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-01</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+            <div class="webinar-card" onclick="openLightbox(1)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_2.png" alt="Webinar Certificate 2" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-02</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+            <div class="webinar-card" onclick="openLightbox(2)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_3.png" alt="Webinar Certificate 3" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-03</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+            <div class="webinar-card" onclick="openLightbox(3)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_4.png" alt="Webinar Certificate 4" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-04</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+            <div class="webinar-card" onclick="openLightbox(4)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_5.png" alt="Webinar Certificate 5" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-05</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+            <div class="webinar-card" onclick="openLightbox(5)">
+                <div class="webinar-img-wrap">
+                    <img src="src/Webinar/Webinar_6.png" alt="Webinar Certificate 6" loading="lazy">
+                    <div class="webinar-overlay">
+                        <div class="webinar-view">View Certificate</div>
+                    </div>
+                </div>
+                <div class="webinar-foot">
+                    <span class="webinar-num">CERT-06</span>
+                    <span class="webinar-badge">Webinar</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="wlb-overlay" id="wlbOverlay" onclick="closeLightboxOutside(event)">
+        <div class="wlb-inner">
+            <button class="wlb-close" onclick="closeLightbox()">✕ CLOSE</button>
+            <button class="wlb-nav wlb-prev" onclick="lbNav(-1)">&#8249;</button>
+            <button class="wlb-nav wlb-next" onclick="lbNav(1)">&#8250;</button>
+            <img id="wlbImg" src="" alt="Certificate">
+            <div class="wlb-counter" id="wlbCounter">1 / 6</div>
+        </div>
+    </div>
+
     <!-- CONTACT -->
     <div class="sdiv"></div>
     <div class="section reveal" id="contact">
-        <p class="stag">07 / Connect</p>
+        <p class="stag">09 / Connect</p>
         <h2 class="stitle">Get In <span>Touch</span></h2>
         <div class="cgrid">
             <div>
@@ -3885,182 +4442,135 @@
         const projectData = {
             nurtura: {
                 type: 'IoT · Smart Agriculture',
-                title: 'Nurtura',
+                title: 'Nurtura-IoT',
                 role: 'Hardware Specialist',
-                desc: 'Nurtura is an automated plant care system built on the ESP32 microcontroller. It reads soil moisture, ambient temperature, and humidity in real-time, then triggers watering pumps and lights automatically. Data is pushed over MQTT to a cloud dashboard for remote monitoring and alert notifications.',
-                languages: ['C / C++', 'Python', 'JavaScript'],
+                desc: 'Nurtura-IoT is an ESP32-based smart plant monitoring system that tracks soil moisture, temperature, humidity, and light levels in real-time. It communicates via TLS-secured MQTT to HiveMQ Cloud and supports BLE-based Wi-Fi provisioning, OTA firmware updates, and an offline Python test suite with mock device simulation.',
+                languages: ['C / C++', 'Python 3', 'HTML5 / JavaScript'],
                 stack: [
-                    { icon: '⚙️', name: 'ESP32', role: 'Microcontroller' },
-                    { icon: '📡', name: 'MQTT', role: 'Messaging Protocol' },
-                    { icon: '☁️', name: 'Node-RED', role: 'Dashboard / Cloud' },
-                    { icon: '🌡️', name: 'DHT22 / Capacitive Sensor', role: 'Sensors' },
-                    { icon: '🔌', name: 'FreeRTOS', role: 'Task Scheduler' },
-                    { icon: '📊', name: 'InfluxDB', role: 'Time-series Data' },
+                    { icon: '⚙️', name: 'ESP32 (Arduino IDE)', role: 'Microcontroller' },
+                    { icon: '📡', name: 'HiveMQ Cloud', role: 'TLS-Secured MQTT Broker' },
+                    { icon: '📦', name: 'PubSubClient & ArduinoJson', role: 'MQTT + JSON Libraries' },
+                    { icon: '🌡️', name: 'Adafruit BME280 & BH1750', role: 'Multi-Sensor Support' },
+                    { icon: '🧪', name: 'pytest & asyncio-mqtt', role: 'Offline Test Suite' },
+                    { icon: '📲', name: 'bleak (BLE)', role: 'Wi-Fi Provisioning' },
                 ],
                 features: [
-                    'Real-time soil moisture, temperature & humidity monitoring',
-                    'Automated pump & grow light control based on sensor thresholds',
-                    'MQTT-based cloud dashboard with live data charts',
-                    'Push alert notifications when conditions are out of range',
-                    'Multi-sensor support on a single ESP32 with FreeRTOS tasks',
+                    'BLE Wi-Fi provisioning — configure network credentials wirelessly',
+                    'TLS-secured MQTT communication to HiveMQ Cloud',
+                    'OTA (Over-the-Air) firmware updates over Wi-Fi',
+                    'Multi-sensor support: BME280 (temp/humidity/pressure) + BH1750 (light)',
+                    'Offline Python test suite with mock device simulation via pytest & asyncio-mqtt',
+                    'Python + bleak BLE client for provisioning and validation',
                 ],
                 links: [
                     { label: 'View Project', url: 'https://nurturaloam.tech/' },
                     { label: 'GitHub', url: 'https://github.com/AJShin09/Nurtura-IoT' },
                 ],
-                slides: [
-                    { icon: '🌱', label: 'System Overview', sub: 'Add circuit diagram / schematic' },
-                    { icon: '📊', label: 'Dashboard Screenshot', sub: 'Add Node-RED / cloud dashboard UI' },
-                    { icon: '🔌', label: 'Hardware Setup', sub: 'Add photo of assembled hardware' },
+                media: [
+                    { type: 'video', src: 'src/Nurtura/video/Nurtura.mp4', label: 'Demo Video' },
+                    { type: 'image', src: 'src/Nurtura/img/Nurtura-1.png', label: 'Screenshot 1' },
+                    { type: 'image', src: 'src/Nurtura/img/Nurtura-2.png', label: 'Screenshot 2' },
+                    { type: 'image', src: 'src/Nurtura/img/Nurtura-3.png', label: 'Screenshot 3' },
                 ]
             },
             grabity: {
                 type: 'Game Development',
                 title: 'Grab-ity',
                 role: 'Solo Developer — Crane Master',
-                desc: 'Grab-ity is a single-player 2D puzzle game set in an industrial Cyberpunk port. Players control both a character and a crane claw simultaneously to solve physics-based puzzles across 6 progressively challenging levels: The Docks, Warehouse, Cargo Bay, Cyber Vaults, Machinery, and The Escape. Playable in browser — landscape mode required.',
-                languages: ['C#', 'GDScript'],
+                desc: 'Grab-ity is a browser-based physics puzzle game where players use a crane mechanic to solve level-based challenges across a cyberpunk/retro industrial port. Built entirely with JavaScript, HTML5 Canvas, and a custom physics engine — no game engine used. Features 6 progressively challenging levels, star ratings, and full keyboard & mouse/touch input.',
+                languages: ['JavaScript', 'HTML5', 'CSS3'],
                 stack: [
-                    { icon: '🎮', name: 'Game Engine', role: 'Core Runtime' },
-                    { icon: '⚡', name: 'Custom Physics', role: 'Crane & Claw Mechanics' },
-                    { icon: '🎨', name: 'Pixel Art', role: 'Sprites & Tilesets' },
-                    { icon: '🔊', name: 'Audio System', role: 'Music & SFX' },
-                    { icon: '🌐', name: 'Vercel', role: 'Web Deployment' },
-                    { icon: '🕹️', name: 'Dual Controls', role: 'WASD + Arrow Keys' },
+                    { icon: '🎨', name: 'p5.js', role: 'Rendering & Game Loop' },
+                    { icon: '🖼️', name: 'HTML5 Canvas API', role: 'Canvas Rendering' },
+                    { icon: '⚡', name: 'Custom Physics Engine', role: 'Crane & Claw Mechanics' },
+                    { icon: '💾', name: 'localStorage', role: 'Progress Persistence' },
+                    { icon: '🔤', name: 'Google Fonts', role: 'Typography' },
+                    { icon: '🔊', name: 'Audio System', role: 'Background Music & SFX' },
                 ],
                 features: [
-                    '6 unlockable levels set in a Cyberpunk industrial port',
-                    'Dual-control: character (WASD / W to jump) + crane (Arrow Keys)',
-                    'Crane claw open/close with SPACEBAR — grab and stack cargo',
-                    'Progressive level lock system with full level select screen',
-                    'Settings panel: music volume, SFX levels, screen shake toggle',
-                    'Landscape-only layout with auto rotate prompt on mobile',
+                    '6 unlockable levels set in a cyberpunk industrial port',
+                    'Custom crane & physics systems — built without a game engine',
+                    'Level progression with star ratings based on performance',
+                    'Multi-screen menu system (main menu, level select, settings)',
+                    'Keyboard & mouse/touch input for broad device support',
+                    'Background music & SFX with separate volume controls',
                 ],
                 links: [
                     { label: 'Play Live', url: 'https://grab-ity.vercel.app/' },
                     { label: 'GitHub', url: 'https://github.com/AJShin09/Grab-ity' },
                 ],
                 media: [
-                    { type: 'image', src: 'src/project-images/grab-ity.png', label: 'Title Screen' },
-                    { type: 'image', src: 'src/project-images/grab-ity-1.png', label: 'Level Select' },
-                    { type: 'image', src: 'src/project-images/grab-ity-2.png', label: 'Gameplay' },
-                    { type: 'image', src: 'src/project-images/grab-ity-3.png', label: 'Level Detail' },
-                    { type: 'video', src: 'src/project-videos/grab-ity.mp4', label: 'Gameplay Video' },
-                ]
-            },
-            saalibrary: {
-                type: 'Web Application',
-                title: 'SAA-E-Library',
-                role: 'Full-Stack Developer',
-                desc: 'SAA-E-Library is a digital library management system built for educational institutions. It supports book cataloging, borrower management, and advanced search. Authentication ensures secure access for librarians and students, with role-based permissions.',
-                languages: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'],
-                stack: [
-                    { icon: '🌐', name: 'HTML / CSS / JS', role: 'Frontend' },
-                    { icon: '🐘', name: 'PHP', role: 'Backend Logic' },
-                    { icon: '🗄️', name: 'MySQL', role: 'Database' },
-                    { icon: '🔑', name: 'Session Auth', role: 'Authentication' },
-                ],
-                features: [
-                    'Book catalog with CRUD operations',
-                    'Advanced search and filter by genre, author, availability',
-                    'User authentication with librarian and student roles',
-                    'Borrow & return tracking with due-date alerts',
-                    'Admin dashboard with borrow statistics',
-                ],
-                links: [
-                    { label: 'GitHub', url: 'https://github.com/AJShin09/SAA-E-Library' },
-                ],
-                slides: [
-                    { icon: '📚', label: 'Book Catalog View', sub: 'Add screenshot of catalog page' },
-                    { icon: '🔑', label: 'Login / Auth Screen', sub: 'Add login page screenshot' },
-                    { icon: '📊', label: 'Admin Dashboard', sub: 'Add dashboard screenshot' },
+                    { type: 'video', src: 'src/Grab-ity/video/Grab-ity.mp4', label: 'Gameplay Video' },
+                    { type: 'image', src: 'src/Grab-ity/img/Grab-ity-1.png', label: 'Screenshot 1' },
+                    { type: 'image', src: 'src/Grab-ity/img/Grab-ity-2.png', label: 'Screenshot 2' },
+                    { type: 'image', src: 'src/Grab-ity/img/Grab-ity-3.png', label: 'Screenshot 3' },
                 ]
             },
             soundscape: {
                 type: 'Media Platform',
                 title: 'Soundscape',
                 role: 'Frontend Developer',
-                desc: 'Soundscape is a music streaming web application built with pure HTML, CSS, and JavaScript. It features genre-based browsing across categories like Japanese Hits and Korean Hits, a responsive audio player with playback controls, and a clean, immersive UI. Deployed live on Vercel.',
-                languages: ['HTML5', 'CSS3', 'JavaScript'],
+                desc: 'Soundscape is a web-based Asian music streaming app organized by region — Pinoy, Korean, and Japanese. It features genre browsing with animated region filters, a dynamic music player with an immersive blurred album art background, keyboard shortcuts, and an auto-advancing slideshow — all built with pure Vanilla JS and a JSON data source.',
+                languages: ['JavaScript', 'HTML5', 'CSS3'],
                 stack: [
                     { icon: '⚡', name: 'Vanilla JS', role: 'Core Logic' },
-                    { icon: '🎵', name: 'HTML Audio API', role: 'Audio Playback' },
-                    { icon: '🎨', name: 'CSS Animations', role: 'UI / Transitions' },
+                    { icon: '🎵', name: 'Web Audio API', role: 'Audio Playback' },
+                    { icon: '📄', name: 'JSON Data Source', role: 'Track Library' },
+                    { icon: '🔤', name: 'Google Fonts & Material Symbols', role: 'Typography & Icons' },
+                    { icon: '🎨', name: 'CSS Custom Properties', role: 'Theming & Animations' },
                     { icon: '🌐', name: 'Vercel', role: 'Deployment' },
                 ],
                 features: [
-                    'Genre-based music library (J-Hits, K-Hits & more)',
-                    'Responsive audio player with play/pause/skip controls',
-                    'Clean, card-based track browsing UI',
-                    'Multi-page genre navigation with smooth transitions',
-                    'Fully static — no backend required',
+                    'Regional music library: Pinoy, Korean & Japanese genres',
+                    'Multi-genre player navigation via URL parameters',
+                    'Immersive blurred album art background on the player',
+                    'Auto-advancing slideshow with region filter card animations',
+                    'Keyboard shortcuts for playback control',
+                    'Responsive sidebar layout — no backend required',
                 ],
                 links: [
                     { label: 'View Project', url: 'https://soundscape-ten-alpha.vercel.app/' },
                     { label: 'GitHub', url: 'https://github.com/AJShin09/soundscape' },
                 ],
-                slides: [
-                    { icon: '🎵', label: 'Player Interface', sub: 'Add screenshot of player UI' },
-                    { icon: '📋', label: 'Playlist View', sub: 'Add playlist management screenshot' },
-                    { icon: '🌊', label: 'Waveform Visualizer', sub: 'Add visualizer screenshot / GIF' },
+                media: [
+                    { type: 'video', src: 'src/Soundscape/video/Soundscape.mp4', label: 'Demo Video' },
+                    { type: 'image', src: 'src/Soundscape/img/soundscape-1.png', label: 'Screenshot 1' },
+                    { type: 'image', src: 'src/Soundscape/img/soundscape-2.png', label: 'Screenshot 2' },
+                    { type: 'image', src: 'src/Soundscape/img/soundscape-3.png', label: 'Screenshot 3' },
                 ]
             },
             butika: {
-                type: 'Mobile Application',
+                type: 'Desktop Application',
                 title: 'Buti-Ka',
                 role: 'Full-Stack Developer',
-                desc: 'Buti-Ka is a Filipino wellness and self-care mobile app designed to encourage healthy habits through daily check-ins, mood tracking, and guided routines. Built with a focus on simplicity and local cultural relevance, it helps users build positive mental and physical wellness practices.',
-                languages: ['JavaScript', 'HTML5', 'CSS3'],
+                desc: 'Buti-Ka is a Windows desktop application for pharmacy and medicine management. It supports browsing and purchasing medicines, prescription approval workflows, and account management. Built with C# on .NET Framework 4.7.2 using Windows Forms with partial WPF, MySQL for data persistence, and NuGet packages for PDF report generation and QR code support.',
+                languages: ['C#'],
                 stack: [
-                    { icon: '📱', name: 'React Native / Web', role: 'Frontend' },
-                    { icon: '🗄️', name: 'Local Storage', role: 'Data Persistence' },
-                    { icon: '🎨', name: 'CSS / Animations', role: 'UI / UX' },
-                    { icon: '🔗', name: 'GitHub', role: 'Version Control' },
+                    { icon: '🖥️', name: '.NET Framework 4.7.2', role: 'Application Runtime' },
+                    { icon: '🪟', name: 'Windows Forms + WPF', role: 'UI Layer' },
+                    { icon: '🗄️', name: 'MySQL', role: 'Database' },
+                    { icon: '📦', name: 'NuGet', role: 'Package Manager' },
+                    { icon: '📄', name: 'PDF Report Generation', role: 'Reporting' },
+                    { icon: '🏗️', name: 'MVC / MVP Architecture', role: 'Design Pattern' },
                 ],
                 features: [
-                    'Daily mood and wellness check-in system',
-                    'Guided self-care routines and habit tracking',
-                    'Filipino-language UI for local cultural relevance',
-                    'Progress tracking with visual summaries',
-                    'Lightweight, offline-capable design',
+                    'Medicine browsing and purchasing with cart management',
+                    'Prescription approval workflow for regulated medicines',
+                    'Account management for customers and pharmacy staff',
+                    'PDF report generation for transactions and inventory',
+                    'QR code support for product identification',
+                    'Dependency injection and MVC/MVP architecture',
                 ],
                 links: [
                     { label: 'GitHub', url: 'https://github.com/neoaia/Buti-Ka-Final' },
                 ],
-                slides: [
-                    { icon: '🌸', label: 'Home / Dashboard', sub: 'Add screenshot of main screen' },
-                    { icon: '📊', label: 'Mood Tracker', sub: 'Add mood tracking screenshot' },
-                    { icon: '✅', label: 'Habit Routines', sub: 'Add routines/habits screenshot' },
+                media: [
+                    { type: 'video', src: 'src/Buti-Ka/video/Buti-Ka.mp4', label: 'Demo Video' },
+                    { type: 'image', src: 'src/Buti-Ka/img/Buti-Ka-1.png', label: 'Screenshot 1' },
+                    { type: 'image', src: 'src/Buti-Ka/img/Buti-Ka-2.png', label: 'Screenshot 2' },
+                    { type: 'image', src: 'src/Buti-Ka/img/Buti-Ka-3.png', label: 'Screenshot 3' },
                 ]
             },
-            yusisay: {
-                type: 'Social Platform',
-                title: 'Yusi-Say',
-                role: 'Full-Stack Developer',
-                desc: 'Yusi-Say is an anonymous social platform designed with a privacy-first philosophy. No accounts, no tracking, no persistent identity — users post thoughts that expire after a set time. The system uses ephemeral session IDs so content is never tied to a real user.',
-                languages: ['HTML5', 'CSS3', 'JavaScript', 'Node.js', 'SQL'],
-                stack: [
-                    { icon: '🟩', name: 'Node.js / Express', role: 'Backend Server' },
-                    { icon: '🗄️', name: 'SQLite / PostgreSQL', role: 'Database' },
-                    { icon: '🔐', name: 'Ephemeral Sessions', role: 'Anonymity Layer' },
-                    { icon: '🌐', name: 'Vanilla JS', role: 'Frontend' },
-                ],
-                features: [
-                    'No account required — fully anonymous posting',
-                    'Posts expire automatically after a configurable TTL',
-                    'Ephemeral session IDs — no user tracking',
-                    'Real-time feed with WebSocket or polling',
-                    'Content moderation flags without exposing identity',
-                ],
-                links: [
-                    { label: 'GitHub', url: 'https://github.com/zchuwie/yusisay' },
-                ],
-                slides: [
-                    { icon: '💬', label: 'Main Feed View', sub: 'Add screenshot of post feed' },
-                    { icon: '🔐', label: 'Privacy Architecture', sub: 'Add system diagram' },
-                    { icon: '📱', label: 'Mobile Responsive', sub: 'Add mobile screenshot' },
-                ]
-            }
         };
 
         (function () {
@@ -4084,10 +4594,56 @@
                 langsEl.innerHTML = d.languages.map(l => `<span class="pmodal-tag">${l}</span>`).join('');
 
                 // Stack
+                const stackIcons = {
+                    // Hardware / MCU
+                    '⚙️': `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`,
+                    // MQTT / Signal
+                    '📡': `<svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>`,
+                    // Cloud / Server
+                    '☁️': `<svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
+                    // Sensor / Thermometer
+                    '🌡️': `<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>`,
+                    // Testing / Flask
+                    '🧪': `<svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14L15 11V3"/><line x1="6" y1="15" x2="18" y2="15"/></svg>`,
+                    // BLE / Bluetooth
+                    '📲': `<svg viewBox="0 0 24 24"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>`,
+                    // Game / Controller
+                    '🎮': `<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="5"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="11" r="1" fill="var(--accent)" stroke="none"/><circle cx="18" cy="13" r="1" fill="var(--accent)" stroke="none"/></svg>`,
+                    // Canvas / Code
+                    '🖼️': `<svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+                    // Physics / Lightning
+                    '⚡': `<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+                    // Storage / Database
+                    '💾': `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+                    // Fonts / Text
+                    '🔤': `<svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
+                    // CSS / Paint
+                    '🎨': `<svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="var(--accent)" stroke="none"/><circle cx="17.5" cy="10.5" r=".5" fill="var(--accent)" stroke="none"/><circle cx="8.5" cy="7.5" r=".5" fill="var(--accent)" stroke="none"/><circle cx="6.5" cy="12.5" r=".5" fill="var(--accent)" stroke="none"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>`,
+                    // Globe / Web
+                    '🌐': `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+                    // Desktop / Monitor
+                    '🖥️': `<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+                    // Windows
+                    '🪟': `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
+                    // Database
+                    '🗄️': `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+                    // Package
+                    '📦': `<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
+                    // PDF / File
+                    '📄': `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+                    // Architecture
+                    '🏗️': `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><path d="M3 17h4v4H3z"/><line x1="5" y1="17" x2="5" y2="7"/></svg>`,
+                    // Audio
+                    '🎵': `<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+                    // JSON / Data
+                    '📊': `<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+                };
+                const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
                 const stackEl = document.getElementById('pmodalStack');
-                stackEl.innerHTML = d.stack.map(s =>
-                    `<div class="stack-item"><div class="stack-ico">${s.icon}</div><div><div class="stack-name">${s.name}</div><span class="stack-role">${s.role}</span></div></div>`
-                ).join('');
+                stackEl.innerHTML = d.stack.map(s => {
+                    const ico = stackIcons[s.icon] || defaultIcon;
+                    return `<div class="stack-item"><div class="stack-ico">${ico}</div><div><div class="stack-name">${s.name}</div><span class="stack-role">${s.role}</span></div></div>`;
+                }).join('');
 
                 // Features
                 const featEl = document.getElementById('pmodalFeatures');
@@ -4114,7 +4670,7 @@
                                     <span class="pslide-num-badge">${i + 1} / ${totalSlides}</span>
                                     <span class="pslide-caption">${s.label}</span>
                                 </div>
-                                <video class="pslide-video" src="${s.src}" controls muted loop playsinline
+                                <video class="pslide-video" src="${s.src}" controls muted playsinline preload="auto"
                                     style="width:100%;height:100%;object-fit:contain;display:block;background:#000;">
                                 </video>
                             </div>
@@ -4142,43 +4698,40 @@
                 }).join('');
 
                 currentSlide = 0;
-                updateSlideCounter();
+                updateSlideCounter(false);
                 overlay.classList.add('open');
                 document.body.style.overflow = 'hidden';
             }
 
             function pauseActiveVideo() {
-                const activeSlide = document.querySelector('.pmodal-slide.active video');
-                if (activeSlide) activeSlide.pause();
+                const v = document.querySelector('.pmodal-slide.active video');
+                if (v) v.pause();
             }
 
             function closeModal() {
-                pauseActiveVideo();
+                document.querySelectorAll('#pmodalSlides video').forEach(v => { v.pause(); v.src = ''; v.load(); });
+                document.getElementById('pmodalSlides').innerHTML = '';
                 overlay.classList.remove('open');
                 document.body.style.overflow = '';
             }
 
-            function updateSlideCounter() {
-                pauseActiveVideo();
+            function updateSlideCounter(pauseCurrent = true) {
+                if (pauseCurrent) pauseActiveVideo();
                 document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
-                document.querySelectorAll('.pmodal-slide').forEach((s, i) => {
-                    s.classList.toggle('active', i === currentSlide);
-                });
+                document.querySelectorAll('.pmodal-slide').forEach((s, i) => s.classList.toggle('active', i === currentSlide));
             }
 
-            document.getElementById('slideNext').addEventListener('click', () => {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                updateSlideCounter();
-            });
-
-            document.getElementById('slidePrev').addEventListener('click', () => {
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                updateSlideCounter();
-            });
+            document.getElementById('slideNext').addEventListener('click', () => { currentSlide = (currentSlide + 1) % totalSlides; updateSlideCounter(); });
+            document.getElementById('slidePrev').addEventListener('click', () => { currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateSlideCounter(); });
 
             closeBtn.addEventListener('click', closeModal);
             overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+            document.addEventListener('keydown', e => {
+                if (!overlay.classList.contains('open')) return;
+                if (e.key === 'Escape') { closeModal(); return; }
+                if (e.key === 'ArrowLeft') { currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateSlideCounter(); }
+                if (e.key === 'ArrowRight') { currentSlide = (currentSlide + 1) % totalSlides; updateSlideCounter(); }
+            });
 
             document.querySelectorAll('.pcard[data-project]').forEach(card => {
                 // Auto-inject role from projectData into card face
@@ -4238,6 +4791,38 @@
                     c.classList.toggle('hidden', f !== 'all' && c.dataset.cat !== f);
                 });
             });
+        });
+
+
+        /* WEBINAR LIGHTBOX */
+        const wlbSrcs = [
+            'src/Webinar/Webinar_1.png', 'src/Webinar/Webinar_2.png',
+            'src/Webinar/Webinar_3.png', 'src/Webinar/Webinar_4.png',
+            'src/Webinar/Webinar_5.png', 'src/Webinar/Webinar_6.png'
+        ];
+        let wlbIdx = 0;
+        function openLightbox(i) {
+            wlbIdx = i;
+            document.getElementById('wlbImg').src = wlbSrcs[wlbIdx];
+            document.getElementById('wlbCounter').textContent = (wlbIdx + 1) + ' / ' + wlbSrcs.length;
+            document.getElementById('wlbOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('wlbOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function closeLightboxOutside(e) { if (e.target === document.getElementById('wlbOverlay')) closeLightbox(); }
+        function lbNav(dir) {
+            wlbIdx = (wlbIdx + dir + wlbSrcs.length) % wlbSrcs.length;
+            document.getElementById('wlbImg').src = wlbSrcs[wlbIdx];
+            document.getElementById('wlbCounter').textContent = (wlbIdx + 1) + ' / ' + wlbSrcs.length;
+        }
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('wlbOverlay').classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') lbNav(-1);
+            if (e.key === 'ArrowRight') lbNav(1);
         });
 
         /* UTILS */
