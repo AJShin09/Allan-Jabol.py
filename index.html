@@ -2749,8 +2749,9 @@
             }
 
             .hero {
-                grid-template-columns: 1fr;
+                display: block;
                 min-height: auto;
+                padding-top: 58px;
             }
 
             .hero-inner {
@@ -2759,8 +2760,7 @@
             }
 
             .hero-left {
-                padding: 2.5rem 0 2rem;
-                order: 2;
+                padding: 2rem 0 2.5rem;
             }
 
             .hero-right {
@@ -2769,10 +2769,42 @@
 
             .hero-canvas-bg {
                 position: relative;
+                top: auto;
+                right: auto;
                 width: 100%;
-                height: 55vw;
-                min-height: 260px;
-                order: 1;
+                height: 72vw;
+                min-height: 300px;
+                max-height: 420px;
+            }
+
+            .canvas-controls {
+                bottom: .7rem;
+                gap: .3rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0 .5rem;
+            }
+
+            .ctrl-btn {
+                font-size: .58rem;
+                padding: .28rem .6rem;
+            }
+
+            .xray-panel {
+                right: .4rem;
+                gap: .22rem;
+            }
+
+            .xbtn {
+                width: 36px;
+                height: 26px;
+                font-size: .55rem;
+            }
+
+            .drag-hint {
+                font-size: .46rem;
+                padding: .18rem .45rem;
+                white-space: nowrap;
             }
 
             .section {
@@ -4555,6 +4587,22 @@
             animate();
 
             window.addEventListener('resize', resize);
+
+            /* Mobile: zoom in camera so board fills the taller canvas */
+            function applyMobileZoom() {
+                if (window.innerWidth <= 768) {
+                    zoom = 4.5; targetZoom = 4.5;
+                    camera.position.set(0, 2.2, 4.5);
+                } else {
+                    zoom = 6.5; targetZoom = 6.5;
+                    camera.position.set(0, 2.8, 6.5);
+                }
+                camera.lookAt(0, 0, 0);
+            }
+            applyMobileZoom();
+            window.addEventListener('resize', applyMobileZoom);
+
+            new ResizeObserver(resize).observe(container);
             document.getElementById('themeToggle').addEventListener('click', () => setTimeout(syncTheme, 80));
         })();
 
@@ -4871,9 +4919,7 @@
         /* THEME */
         const html = document.documentElement;
         const tBtn = document.getElementById('themeToggle');
-        const sv = localStorage.getItem('theme');
-        if (sv) html.setAttribute('data-theme', sv);
-        else html.setAttribute('data-theme', 'dark');
+        html.setAttribute('data-theme', 'dark');
         tBtn.addEventListener('click', () => {
             const n = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', n); localStorage.setItem('theme', n);
