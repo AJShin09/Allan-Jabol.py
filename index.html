@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allan V. Jabol Jr. — IoT & Cybersecurity Engineer</title>
+    <title>Allan V. Jabol Jr.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1903,13 +1903,13 @@
             max-width: 1000px;
             width: 100%;
             max-height: 90vh;
-            overflow-y: auto;
+            overflow: hidden;
             position: relative;
             clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
             transform: translateY(20px);
             transition: transform .3s;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border2) transparent;
+            display: flex;
+            flex-direction: column;
         }
 
         .pmodal-overlay.open .pmodal {
@@ -1917,8 +1917,8 @@
         }
 
         .pmodal-close {
-            position: sticky;
-            top: 0;
+            position: relative;
+            display: block;
             float: right;
             font-family: 'Share Tech Mono', monospace;
             font-size: .58rem;
@@ -1932,6 +1932,7 @@
             cursor: pointer;
             z-index: 10;
             transition: color .2s, background .2s;
+            flex-shrink: 0;
         }
 
         .pmodal-close:hover {
@@ -1939,17 +1940,59 @@
             background: var(--surface);
         }
 
+        .pmodal-header {
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg2);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pmodal-body {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 0;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .pmodal-body .pmodal-left {
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pmodal-body .pmodal-right {
+            padding: 2rem;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border2) transparent;
+        }
+
         .pmodal-inner {
             display: grid;
             grid-template-columns: 1.1fr .9fr;
             gap: 0;
             clear: both;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .pmodal-left {
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pmodal-right {
+            padding: 2rem;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border2) transparent;
         }
 
         .pmodal-slideshow {
@@ -2051,10 +2094,6 @@
             letter-spacing: .08em;
             min-width: 40px;
             text-align: center;
-        }
-
-        .pmodal-right {
-            padding: 2rem;
         }
 
         .pmodal-type {
@@ -2249,6 +2288,27 @@
             overflow: hidden;
             border: 1px solid var(--border);
             transition: border-color .3s, transform .3s, box-shadow .3s;
+            position: relative;
+        }
+
+        .exp-photo-item::after {
+            content: '⤢ VIEW';
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .52rem;
+            letter-spacing: .14em;
+            color: var(--accent2);
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 12, 22, .55);
+            opacity: 0;
+            transition: opacity .25s;
+        }
+
+        .exp-photo-item:hover::after {
+            opacity: 1;
         }
 
         .exp-photo-item:hover {
@@ -2643,11 +2703,13 @@
                 grid-column: 1 / 3;
             }
 
-            .pmodal-inner {
+            .pmodal-inner,
+            .pmodal-body {
                 grid-template-columns: 1fr;
             }
 
-            .pmodal-left {
+            .pmodal-left,
+            .pmodal-body .pmodal-left {
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
@@ -2760,9 +2822,15 @@
 
         /* ── TECH STACK SECTION ── */
         .ts-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.2rem 3.5rem;
+        }
+
+        @media(max-width:768px) {
+            .ts-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .ts-group {
@@ -2776,23 +2844,42 @@
             font-size: .6rem;
             letter-spacing: .2em;
             text-transform: uppercase;
-            color: var(--accent2);
             display: flex;
             align-items: center;
-            gap: .55rem;
+            gap: .5rem;
             padding-bottom: .55rem;
             border-bottom: 1px solid var(--border);
         }
 
-        .ts-group-label::before {
-            content: '//';
-            color: var(--text3);
+        .ts-group-label.lang {
+            color: var(--accent);
+            border-bottom-color: rgba(0, 220, 255, .25);
+        }
+
+        .ts-group-label.frame {
+            color: var(--accent2);
+            border-bottom-color: rgba(0, 255, 148, .25);
+        }
+
+        .ts-group-label.db {
+            color: var(--accent3);
+            border-bottom-color: rgba(155, 89, 182, .25);
+        }
+
+        .ts-group-label.tools {
+            color: var(--warn);
+            border-bottom-color: rgba(255, 107, 53, .25);
+        }
+
+        .ts-group-label svg {
+            opacity: .7;
+            flex-shrink: 0;
         }
 
         .ts-pills {
             display: flex;
             flex-wrap: wrap;
-            gap: .55rem;
+            gap: .5rem;
         }
 
         .ts-pill {
@@ -2800,12 +2887,12 @@
             align-items: center;
             gap: .45rem;
             font-family: 'Share Tech Mono', monospace;
-            font-size: .68rem;
+            font-size: .65rem;
             letter-spacing: .06em;
-            color: var(--text);
+            color: var(--text2);
             background: var(--surface);
             border: 1px solid var(--border);
-            padding: .38rem .85rem;
+            padding: .3rem .75rem;
             transition: all .22s;
             position: relative;
             overflow: hidden;
@@ -2820,15 +2907,6 @@
             transform: scaleX(0);
             transform-origin: left;
             transition: transform .22s;
-        }
-
-        .ts-pill:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .ts-pill:hover::before {
-            transform: scaleX(1);
         }
 
         .ts-pill span {
@@ -2847,63 +2925,67 @@
             z-index: 1;
         }
 
-        .ts-group:nth-child(2) .ts-pill .ts-dot {
-            background: var(--accent2);
-            box-shadow: 0 0 5px var(--accent2);
+        /* Per-category pill styles */
+        .ts-pill-lang:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
-        .ts-group:nth-child(2) .ts-pill:hover {
+        .ts-pill-lang:hover::before {
+            transform: scaleX(1);
+            background: var(--ag);
+        }
+
+        .ts-pill-lang .ts-dot {
+            background: var(--accent);
+            box-shadow: 0 0 5px var(--accent);
+        }
+
+        .ts-pill-frame:hover {
             border-color: var(--accent2);
             color: var(--accent2);
         }
 
-        .ts-group:nth-child(2) .ts-pill::before {
+        .ts-pill-frame:hover::before {
+            transform: scaleX(1);
             background: var(--a2g);
         }
 
-        .ts-group:nth-child(3) .ts-pill .ts-dot {
-            background: var(--accent3);
-            box-shadow: 0 0 5px var(--accent3);
+        .ts-pill-frame .ts-dot {
+            background: var(--accent2);
+            box-shadow: 0 0 5px var(--accent2);
         }
 
-        .ts-group:nth-child(3) .ts-pill:hover {
+        .ts-pill-db:hover {
             border-color: var(--accent3);
             color: var(--accent3);
         }
 
-        .ts-group:nth-child(3) .ts-pill::before {
+        .ts-pill-db:hover::before {
+            transform: scaleX(1);
             background: var(--a3g);
         }
 
-        .ts-group:nth-child(4) .ts-pill .ts-dot {
-            background: var(--warn);
-            box-shadow: 0 0 5px var(--warn);
+        .ts-pill-db .ts-dot {
+            background: var(--accent3);
+            box-shadow: 0 0 5px var(--accent3);
         }
 
-        .ts-group:nth-child(4) .ts-pill:hover {
+        .ts-pill-tools:hover {
             border-color: var(--warn);
             color: var(--warn);
         }
 
-        .ts-group:nth-child(4) .ts-pill::before {
+        .ts-pill-tools:hover::before {
+            transform: scaleX(1);
             background: var(--warnG);
         }
 
-        .ts-group-label.lang {
-            color: var(--accent);
+        .ts-pill-tools .ts-dot {
+            background: var(--warn);
+            box-shadow: 0 0 5px var(--warn);
         }
 
-        .ts-group-label.frame {
-            color: var(--accent2);
-        }
-
-        .ts-group-label.db {
-            color: var(--accent3);
-        }
-
-        .ts-group-label.tools {
-            color: var(--warn);
-        }
 
         /* ── WEBINAR / CERTIFICATES SECTION ── */
         .webinar-grid {
@@ -3137,6 +3219,7 @@
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#education">Education</a></li>
                 <li><a href="#techstack">Tech Stack</a></li>
+
                 <li><a href="#webinars">Certificates</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -3456,9 +3539,10 @@
     <!-- PROJECT DETAIL MODAL -->
     <div class="pmodal-overlay" id="pmodalOverlay">
         <div class="pmodal" id="pmodal">
-            <button class="pmodal-close" id="pmodalClose">✕ CLOSE</button>
-
-            <div class="pmodal-inner">
+            <div class="pmodal-header">
+                <button class="pmodal-close" id="pmodalClose">✕ CLOSE</button>
+            </div>
+            <div class="pmodal-body">
                 <!-- LEFT: Slideshow -->
                 <div class="pmodal-left">
                     <div class="pmodal-slideshow" id="pmodalSlides">
@@ -3493,6 +3577,17 @@
         </div>
     </div>
 
+    <!-- EXPERIENCE PHOTO LIGHTBOX -->
+    <div class="wlb-overlay" id="expLbOverlay" onclick="closeExpLightboxOutside(event)">
+        <div class="wlb-inner">
+            <button class="wlb-close" onclick="closeExpLightbox()">✕ CLOSE</button>
+            <button class="wlb-nav wlb-prev" onclick="expLbNav(-1)">&#8249;</button>
+            <button class="wlb-nav wlb-next" onclick="expLbNav(1)">&#8250;</button>
+            <img id="expLbImg" src="" alt="Experience Photo">
+            <div class="wlb-counter" id="expLbCounter">1 / 8</div>
+        </div>
+    </div>
+
     <!-- EXPERIENCE -->
     <div class="sdiv"></div>
     <div class="section reveal" id="experience">
@@ -3505,36 +3600,36 @@
 
         <div class="exp-photo-grid">
             <!-- Row 1: Experience_1 to Experience_6 (W400 H533 each) -->
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(0)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_1.png" alt="Experience 1"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(1)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_2.png" alt="Experience 2"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(2)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_3.png" alt="Experience 3"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(3)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_4.png" alt="Experience 4"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(4)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_5.png" alt="Experience 5"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-portrait">
+            <div class="exp-photo-item exp-portrait" onclick="openExpLightbox(5)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_6.png" alt="Experience 6"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
             <!-- Row 2: Experience_7 (W433 H325) and Experience_8 (W433 H235) -->
-            <div class="exp-photo-item exp-landscape-7">
+            <div class="exp-photo-item exp-landscape-7" onclick="openExpLightbox(6)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_7.png" alt="Experience 7"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <div class="exp-photo-item exp-landscape-8">
+            <div class="exp-photo-item exp-landscape-8" onclick="openExpLightbox(7)" style="cursor:pointer;">
                 <img src="src/Experience/img/Experience_8.png" alt="Experience 8"
                     style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
@@ -3574,138 +3669,158 @@
         </div>
     </div>
 
-    <!-- LEARNING -->
-    <div class="sdiv"></div>
-    <div class="section reveal" id="learning">
-        <p class="stag">06 / Progress</p>
-        <h2 class="stitle">Learning <span>Journey</span></h2>
-        <div class="lgrid">
-            <div class="lcard">
-                <div class="ltit">IoT Protocols &amp; Architecture</div>
-                <div class="ldesc2">MQTT, CoAP, HTTP/REST, edge computing, sensor networks.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:70%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">70%</span></div>
-            </div>
-            <div class="lcard">
-                <div class="ltit">Network Security &amp; Cyber Defense</div>
-                <div class="ldesc2">Firewalls, IDS/IPS, threat modeling, TLS/SSL, secure protocols.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:65%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">65%</span></div>
-            </div>
-            <div class="lcard">
-                <div class="ltit">Embedded Systems &amp; Firmware</div>
-                <div class="ldesc2">ESP32/Arduino, FreeRTOS, GPIO, I2C, SPI, UART communication.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:68%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">68%</span></div>
-            </div>
-            <div class="lcard">
-                <div class="ltit">Networking Fundamentals</div>
-                <div class="ldesc2">TCP/IP, OSI model, subnetting, VLANs, routing &amp; switching.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:72%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">72%</span></div>
-            </div>
-            <div class="lcard">
-                <div class="ltit">Web &amp; Full-Stack Development</div>
-                <div class="ldesc2">HTML/CSS/JS, React, Python, REST APIs, version control.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:70%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">70%</span></div>
-            </div>
-            <div class="lcard">
-                <div class="ltit">Logic Circuits &amp; Algorithms</div>
-                <div class="ldesc2">Boolean logic, switching theory, data structures, algorithm design.</div>
-                <div class="lbar">
-                    <div class="lfill" style="--w:62%"></div>
-                </div>
-                <div class="lmeta"><span>Proficiency</span><span class="lpct">62%</span></div>
-            </div>
-        </div>
+    <!-- LEARNING REMOVED -->
     </div>
-
     <!-- TECH STACK -->
     <div class="sdiv"></div>
     <div class="section reveal" id="techstack">
-        <p class="stag">07 / Arsenal</p>
+        <p class="stag">06 / Arsenal</p>
         <h2 class="stitle">Tech <span>Stack</span></h2>
+        <p
+            style="font-size:.78rem;color:var(--text2);margin-bottom:2.2rem;margin-top:-.8rem;font-family:'Share Tech Mono',monospace;letter-spacing:.06em;">
+            // Tools, languages &amp; frameworks I build with</p>
         <div class="ts-grid">
 
             <div class="ts-group">
-                <div class="ts-group-label lang">Languages</div>
+                <div class="ts-group-label lang">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="12"
+                        height="12">
+                        <path d="M3 3l4 4-4 4M9 11h4" />
+                    </svg>
+                    Languages
+                </div>
                 <div class="ts-pills">
-                    <div class="ts-pill">
-                        <div class="ts-dot"></div><span>PHP</span>
-                    </div>
-                    <div class="ts-pill">
-                        <div class="ts-dot"></div><span>JavaScript</span>
-                    </div>
-                    <div class="ts-pill">
-                        <div class="ts-dot"></div><span>TypeScript</span>
-                    </div>
-                    <div class="ts-pill">
-                        <div class="ts-dot"></div><span>C</span>
-                    </div>
-                    <div class="ts-pill">
-                        <div class="ts-dot"></div><span>C++</span>
-                    </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-lang">
                         <div class="ts-dot"></div><span>C#</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>JavaScript</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>TypeScript</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>PHP</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>Python 3</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>C</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>C++</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
                         <div class="ts-dot"></div><span>Java</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-lang">
                         <div class="ts-dot"></div><span>SQL</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-lang">
                         <div class="ts-dot"></div><span>VB.NET</span>
                     </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>HTML5</span>
+                    </div>
+                    <div class="ts-pill ts-pill-lang">
+                        <div class="ts-dot"></div><span>CSS3</span>
+                    </div>
                 </div>
             </div>
 
             <div class="ts-group">
-                <div class="ts-group-label frame">Frameworks</div>
+                <div class="ts-group-label frame">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="12"
+                        height="12">
+                        <rect x="2" y="2" width="12" height="12" rx="1" />
+                        <path d="M5 8h6M8 5v6" />
+                    </svg>
+                    Frameworks
+                </div>
                 <div class="ts-pills">
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-frame">
+                        <div class="ts-dot"></div><span>.NET Framework 4.7.2</span>
+                    </div>
+                    <div class="ts-pill ts-pill-frame">
+                        <div class="ts-dot"></div><span>Windows Forms</span>
+                    </div>
+                    <div class="ts-pill ts-pill-frame">
+                        <div class="ts-dot"></div><span>WPF</span>
+                    </div>
+                    <div class="ts-pill ts-pill-frame">
                         <div class="ts-dot"></div><span>Laravel</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-frame">
                         <div class="ts-dot"></div><span>React</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-frame">
                         <div class="ts-dot"></div><span>Node.js</span>
+                    </div>
+                    <div class="ts-pill ts-pill-frame">
+                        <div class="ts-dot"></div><span>p5.js</span>
+                    </div>
+                    <div class="ts-pill ts-pill-frame">
+                        <div class="ts-dot"></div><span>ESP-IDF</span>
                     </div>
                 </div>
             </div>
 
             <div class="ts-group">
-                <div class="ts-group-label db">Databases</div>
+                <div class="ts-group-label db">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="12"
+                        height="12">
+                        <ellipse cx="8" cy="5" rx="6" ry="2" />
+                        <path d="M2 5v6c0 1.1 2.7 2 6 2s6-.9 6-2V5" />
+                        <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
+                    </svg>
+                    Databases
+                </div>
                 <div class="ts-pills">
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-db">
                         <div class="ts-dot"></div><span>MySQL</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-db">
                         <div class="ts-dot"></div><span>SQLite</span>
                     </div>
                 </div>
             </div>
 
             <div class="ts-group">
-                <div class="ts-group-label tools">Tools</div>
+                <div class="ts-group-label tools">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="12"
+                        height="12">
+                        <path d="M12.5 2.5l1 1-8.5 8.5-2.5.5.5-2.5 8.5-8.5zM10 4l2 2" />
+                    </svg>
+                    Tools
+                </div>
                 <div class="ts-pills">
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-tools">
                         <div class="ts-dot"></div><span>Git</span>
                     </div>
-                    <div class="ts-pill">
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>GitHub</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>Visual Studio</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>VS Code</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
                         <div class="ts-dot"></div><span>Vite</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>NuGet</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>Arduino IDE</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>HiveMQ Cloud</span>
+                    </div>
+                    <div class="ts-pill ts-pill-tools">
+                        <div class="ts-dot"></div><span>MySQL Workbench</span>
                     </div>
                 </div>
             </div>
@@ -3716,7 +3831,7 @@
     <!-- WEBINARS / CERTIFICATES -->
     <div class="sdiv"></div>
     <div class="section reveal" id="webinars">
-        <p class="stag">08 / Credentials</p>
+        <p class="stag">07 / Credentials</p>
         <h2 class="stitle">Webinars &amp; <span>Certificates</span></h2>
         <div class="webinar-grid">
 
@@ -3815,7 +3930,7 @@
     <!-- CONTACT -->
     <div class="sdiv"></div>
     <div class="section reveal" id="contact">
-        <p class="stag">09 / Connect</p>
+        <p class="stag">08 / Connect</p>
         <h2 class="stitle">Get In <span>Touch</span></h2>
         <div class="cgrid">
             <div>
@@ -4534,9 +4649,9 @@
                 ],
                 media: [
                     { type: 'video', src: 'src/Soundscape/video/Soundscape.mp4', label: 'Demo Video' },
-                    { type: 'image', src: 'src/Soundscape/img/soundscape-1.png', label: 'Screenshot 1' },
-                    { type: 'image', src: 'src/Soundscape/img/soundscape-2.png', label: 'Screenshot 2' },
-                    { type: 'image', src: 'src/Soundscape/img/soundscape-3.png', label: 'Screenshot 3' },
+                    { type: 'image', src: 'src/Soundscape/img/Soundscape-1.png', label: 'Screenshot 1' },
+                    { type: 'image', src: 'src/Soundscape/img/Soundscape-2.png', label: 'Screenshot 2' },
+                    { type: 'image', src: 'src/Soundscape/img/Soundscape-3.png', label: 'Screenshot 3' },
                 ]
             },
             butika: {
@@ -4793,6 +4908,38 @@
             });
         });
 
+
+        /* EXPERIENCE PHOTO LIGHTBOX */
+        const expLbSrcs = [
+            'src/Experience/img/Experience_1.png', 'src/Experience/img/Experience_2.png',
+            'src/Experience/img/Experience_3.png', 'src/Experience/img/Experience_4.png',
+            'src/Experience/img/Experience_5.png', 'src/Experience/img/Experience_6.png',
+            'src/Experience/img/Experience_7.png', 'src/Experience/img/Experience_8.png'
+        ];
+        let expLbIdx = 0;
+        function openExpLightbox(i) {
+            expLbIdx = i;
+            document.getElementById('expLbImg').src = expLbSrcs[expLbIdx];
+            document.getElementById('expLbCounter').textContent = (expLbIdx + 1) + ' / ' + expLbSrcs.length;
+            document.getElementById('expLbOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeExpLightbox() {
+            document.getElementById('expLbOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function closeExpLightboxOutside(e) { if (e.target === document.getElementById('expLbOverlay')) closeExpLightbox(); }
+        function expLbNav(dir) {
+            expLbIdx = (expLbIdx + dir + expLbSrcs.length) % expLbSrcs.length;
+            document.getElementById('expLbImg').src = expLbSrcs[expLbIdx];
+            document.getElementById('expLbCounter').textContent = (expLbIdx + 1) + ' / ' + expLbSrcs.length;
+        }
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('expLbOverlay').classList.contains('open')) return;
+            if (e.key === 'Escape') closeExpLightbox();
+            if (e.key === 'ArrowLeft') expLbNav(-1);
+            if (e.key === 'ArrowRight') expLbNav(1);
+        });
 
         /* WEBINAR LIGHTBOX */
         const wlbSrcs = [
