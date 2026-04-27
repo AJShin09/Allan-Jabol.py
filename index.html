@@ -4109,7 +4109,100 @@
             right: -52px;
         }
 
-        /* Empty state */
+        /* ── COMING SOON STATE ── */
+        .id-ag-coming-soon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .9rem;
+            padding: 2.8rem 2rem;
+            border: 1.5px dashed rgba(184, 92, 56, .25);
+            border-radius: 4px;
+            background: rgba(255, 252, 245, .5);
+            transform: rotate(-.2deg);
+        }
+
+        .id-cs-squiggle {
+            width: 100%;
+            max-width: 260px;
+            opacity: .7;
+        }
+
+        .id-cs-inner {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+        }
+
+        .id-cs-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: .68rem;
+            letter-spacing: .14em;
+            color: rgba(184, 92, 56, .55);
+            text-transform: uppercase;
+        }
+
+        .id-cs-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: rgba(80, 55, 30, .6);
+            line-height: 1;
+            transform: rotate(-.5deg);
+            display: inline-block;
+        }
+
+        .id-cs-sub {
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+            color: rgba(120, 85, 50, .45);
+            font-style: italic;
+        }
+
+        /* ── VIDEO THUMBNAIL ── */
+        .id-ag-vid-thumb {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            background: rgba(225, 215, 200, .75);
+        }
+
+        .id-ag-vid-lines {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(0deg,
+                    transparent, transparent 18px,
+                    rgba(160, 135, 100, .22) 18px, rgba(160, 135, 100, .22) 19px);
+            pointer-events: none;
+        }
+
+        .id-ag-vid-play {
+            position: relative;
+            z-index: 1;
+            transition: transform .2s;
+        }
+
+        .id-ag-item:hover .id-ag-vid-play {
+            transform: scale(1.15);
+        }
+
+        .id-ag-vid-name {
+            position: relative;
+            z-index: 1;
+            font-family: 'Caveat', cursive;
+            font-size: .88rem;
+            color: rgba(120, 85, 50, .6);
+            text-transform: capitalize;
+            letter-spacing: .04em;
+        }
+
+        /* Empty state (legacy fallback) */
         .id-ag-empty {
             background: rgba(255, 252, 245, .6);
             border: 1.5px dashed rgba(180, 160, 120, .38);
@@ -4402,13 +4495,12 @@
                         target="_blank" rel="noopener" class="id-ui-linked-card">
                         <div class="id-ui-linked-thumb">
                             <img src="src/creative/ui-design/ui-1.jpg"
-                                onerror="this.src='src/creative/ui-design/ui-1.png'" alt="Light Mood UI Design"
-                                loading="lazy">
+                                onerror="this.src='src/creative/ui-design/ui-1.png'" alt="STS UI Design" loading="lazy">
                             <div class="id-ui-linked-overlay"><span>View Prototype ↗</span></div>
                         </div>
                         <div class="id-ui-linked-info">
                             <span class="id-ui-linked-num">ui-design / 01</span>
-                            <span class="id-ui-linked-name">Light Mood</span>
+                            <span class="id-ui-linked-name">STS</span>
                         </div>
                     </a>
                     <a href="https://www.figma.com/proto/Kn49fVpg1vLqbTCz6RiKcM/StepUP---Smart-Cane-For-Impaired-User?node-id=230-276&page-id=0%3A1&starting-point-node-id=1%3A4&t=4WSsjV069QerAhoM-1"
@@ -5347,7 +5439,10 @@
             const expOffsets = [[0, 0, 0, 0], [0, .06, .3, .65], [0, .12, .9, 2.0], [0, .2, 1.8, 3.8]];
 
             /* ── MATERIAL HELPERS ── */
-            function M(c, o = {}) { return new THREE.MeshStandardMaterial({ color: c, roughness: o.r ?? 0.55, metalness: o.m ?? 0.1, ...o }); }
+            function M(c, o = {}) {
+                const { r, m, ...rest } = o;
+                return new THREE.MeshStandardMaterial({ color: c, roughness: r ?? 0.55, metalness: m ?? 0.1, ...rest });
+            }
             function Mem(c, e, ei = 2.5) { return new THREE.MeshStandardMaterial({ color: c, emissive: e, emissiveIntensity: ei, roughness: .06, transparent: true, opacity: .9 }); }
 
             /* EXACT ESP32-DEVKITC MATERIAL PALETTE */
@@ -6384,13 +6479,18 @@
         function handleForm(e) { e.preventDefault(); alert("Message sent! I'll get back to you soon."); e.target.reset(); }
 
         /* ══════════════════════════════════════════════
-           AUTO-LOADING CREATIVE GALLERY SYSTEM
-           Drop images/videos into the folder listed in
-           each gallery's data-folder attribute and they
-           auto-appear. Supported extensions below.
+           CREATIVE GALLERY SYSTEM — manifest.json based
+           Zero blind probing. Zero console spam.
+
+           HOW TO USE:
+           In each gallery folder, create a manifest.json:
+             ["photography-1.jpg","photography-2.jpg"]
+           For videos:
+             ["video-1.mp4","video-2.mp4"]
+           That's it. Gallery auto-renders from the list.
         ══════════════════════════════════════════════ */
         (function () {
-            // ── Lightbox shared state ──
+            // ── Lightbox ──
             const lb = document.createElement('div');
             lb.className = 'id-lb-overlay';
             lb.innerHTML = `
@@ -6414,7 +6514,7 @@
                 lb.classList.remove('open');
                 document.body.style.overflow = '';
                 const v = lb.querySelector('video');
-                if (v) v.pause();
+                if (v) { v.pause(); v.src = ''; }
             }
             function showLbItem() {
                 const item = lbItems[lbIdx];
@@ -6446,123 +6546,85 @@
                 if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbItems.length; showLbItem(); }
             });
 
-            // ── Gallery loader ──
-            const IMG_EXTS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
-            const VID_EXTS = ['mp4', 'webm', 'mov'];
+            // ── Render ──
+            const VID_EXTS = new Set(['mp4', 'webm', 'mov']);
 
-            // Convention: filenames are like 01.jpg, 02.png, photo-1.jpg …
-            // The system tries to load them by convention (sequential numbering).
-            // Users simply drop files into the folder — the gallery reads what's there.
-            //
-            // HOW IT WORKS:
-            //   • For each gallery div, we attempt to load images/videos using
-            //     the standard web trick: create an <img> with the expected path
-            //     and listen for load/error. Files that load → show in grid.
-            //   • We try up to 60 sequential filenames (01–60) plus common names.
-            //   • No server-side code needed — pure client-side probing.
-            //
-            // FOLDER STRUCTURE (create these next to index.html):
-            //   src/creative/photography/     → drop photos here
-            //   src/creative/photo-editing/   → drop edited photos here
-            //   src/creative/ui-design/       → drop UI screenshots here
-            //   src/creative/videos/          → drop video files here
-
-            function probeFiles(folder, isVideo, maxTries) {
-                const allExts = isVideo ? VID_EXTS : IMG_EXTS;
-                const promises = [];
-
-                // Try numbered files: 01.ext → 60.ext
-                for (let i = 1; i <= maxTries; i++) {
-                    const num = String(i).padStart(2, '0');
-                    allExts.forEach(ext => {
-                        promises.push(probeOne(folder + num + '.' + ext, ext, isVideo));
-                        // also try without padding
-                        if (i < 10) promises.push(probeOne(folder + i + '.' + ext, ext, isVideo));
-                    });
-                }
-                // Also try common base names
-                ['photography', 'photo', 'img', 'image', 'edit', 'ui', 'design', 'art', 'graphic', 'shot', 'frame', 'clip', 'video', 'intro', 'reel'].forEach(name => {
-                    for (let i = 1; i <= 10; i++) {
-                        allExts.forEach(ext => {
-                            promises.push(probeOne(folder + name + '-' + i + '.' + ext, ext, isVideo));
-                            promises.push(probeOne(folder + name + '_' + i + '.' + ext, ext, isVideo));
-                        });
-                    }
-                });
-                return Promise.allSettled(promises);
-            }
-
-            function probeOne(src, ext, isVideo) {
-                return new Promise((resolve, reject) => {
-                    if (isVideo) {
-                        // For video we use a quick fetch HEAD-alike via fetch with no-cors
-                        // Simpler: just add to list and let the browser handle errors on play
-                        // We use an Image trick won't work for video, so we do a lightweight fetch
-                        fetch(src, { method: 'HEAD', mode: 'same-origin' })
-                            .then(r => r.ok ? resolve({ src, type: 'video', name: src.split('/').pop() }) : reject())
-                            .catch(() => reject());
-                    } else {
-                        const img = new Image();
-                        img.onload = () => resolve({ src, type: 'image', name: src.split('/').pop() });
-                        img.onerror = () => reject();
-                        img.src = src;
-                    }
-                });
-            }
-
-            function renderGallery(container, items, label) {
+            function renderGallery(container, filenames) {
                 container.innerHTML = '';
-                if (!items.length) {
-                    const folder = container.dataset.folder;
+                const folder = container.dataset.folder;
+                const isVideo = container.dataset.type === 'video';
+                const label = container.dataset.label || 'work';
+
+                if (!filenames || !filenames.length) {
                     container.innerHTML = `
-                        <div class="id-ag-empty">
-                            <div class="ph-icon">${container.dataset.type === 'video' ? '🎬' : '📷'}</div>
-                            <p>Drop your files into <code>${folder}</code></p>
-                            <p style="font-size:.88rem;color:rgba(120,90,60,.45);">They'll automatically appear here — no code needed.</p>
+                        <div class="id-ag-coming-soon">
+                            <svg class="id-cs-squiggle" viewBox="0 0 260 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 9 Q15 2 28 9 Q41 16 54 9 Q67 2 80 9 Q93 16 106 9 Q119 2 132 9 Q145 16 158 9 Q171 2 184 9 Q197 16 210 9 Q223 2 236 9 Q249 16 258 9"
+                                    stroke="rgba(184,92,56,0.35)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            </svg>
+                            <div class="id-cs-inner">
+                                <span class="id-cs-tag">// ${label}</span>
+                                <p class="id-cs-title">coming soon</p>
+                                <p class="id-cs-sub">working on it —</p>
+                            </div>
+                            <svg class="id-cs-squiggle" viewBox="0 0 260 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 9 Q15 2 28 9 Q41 16 54 9 Q67 2 80 9 Q93 16 106 9 Q119 2 132 9 Q145 16 158 9 Q171 2 184 9 Q197 16 210 9 Q223 2 236 9 Q249 16 258 9"
+                                    stroke="rgba(184,92,56,0.35)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            </svg>
                         </div>`;
                     return;
                 }
-                // Deduplicate by src
-                const seen = new Set();
-                const unique = items.filter(it => { if (seen.has(it.src)) return false; seen.add(it.src); return true; });
+
+                const items = filenames.map(name => {
+                    const ext = name.split('.').pop().toLowerCase();
+                    return { src: folder + name, name, type: VID_EXTS.has(ext) ? 'video' : 'image' };
+                });
 
                 const grid = document.createElement('div');
                 grid.className = 'id-ag-grid';
-                unique.forEach((item, i) => {
+
+                items.forEach((item, i) => {
                     const cell = document.createElement('div');
                     cell.className = 'id-ag-item';
+
                     if (item.type === 'video') {
-                        const v = document.createElement('video');
-                        v.src = item.src; v.muted = true; v.loop = true; v.playsInline = true;
-                        cell.appendChild(v);
-                        cell.addEventListener('mouseenter', () => v.play());
-                        cell.addEventListener('mouseleave', () => { v.pause(); v.currentTime = 0; });
+                        // Theme-appropriate video thumbnail
+                        const thumb = document.createElement('div');
+                        thumb.className = 'id-ag-vid-thumb';
+                        const fname = item.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+                        thumb.innerHTML = `
+                            <div class="id-ag-vid-lines"></div>
+                            <div class="id-ag-vid-play">
+                                <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                                    <circle cx="12" cy="12" r="10" stroke="rgba(184,92,56,0.6)" stroke-width="1.5"/>
+                                    <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="rgba(184,92,56,0.75)"/>
+                                </svg>
+                            </div>
+                            <span class="id-ag-vid-name">${fname}</span>`;
+                        cell.appendChild(thumb);
+                        cell.addEventListener('click', () => openLb(items, i));
                     } else {
                         const img = document.createElement('img');
                         img.src = item.src; img.alt = item.name; img.loading = 'lazy';
                         cell.appendChild(img);
+                        cell.addEventListener('click', () => openLb(items, i));
                     }
-                    cell.addEventListener('click', () => openLb(unique, i));
+
                     grid.appendChild(cell);
                 });
+
                 container.appendChild(grid);
             }
 
-            // Init all galleries
+            // ── Init — fetch manifest.json per gallery ──
             document.querySelectorAll('.id-auto-gallery').forEach(container => {
                 const folder = container.dataset.folder;
-                const isVideo = container.dataset.type === 'video';
-                const label = container.dataset.label || '';
-
-                // Show empty state immediately, then probe
-                renderGallery(container, [], label);
-
-                probeFiles(folder, isVideo, 60).then(results => {
-                    const found = results
-                        .filter(r => r.status === 'fulfilled')
-                        .map(r => r.value);
-                    renderGallery(container, found, label);
-                });
+                // Show empty state while loading
+                renderGallery(container, []);
+                fetch(folder + 'manifest.json')
+                    .then(r => r.ok ? r.json() : [])
+                    .then(files => renderGallery(container, files))
+                    .catch(() => renderGallery(container, []));
             });
         })();
     </script>
