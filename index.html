@@ -4253,13 +4253,19 @@
             position: relative;
             z-index: 1;
             border-top: 1.5px solid rgba(180, 160, 120, .22);
-            padding: 1.6rem 2.5rem;
+            padding: 1.4rem 2.5rem 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .8rem;
+            margin-top: 2rem;
+        }
+
+        .id-footer-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: .6rem;
-            margin-top: 2rem;
+            gap: .4rem;
         }
 
         .id-footer p {
@@ -4268,13 +4274,25 @@
             color: rgba(120, 90, 60, .55);
         }
 
+        .id-footer-hint {
+            font-family: 'Caveat', cursive;
+            font-size: .88rem;
+            color: rgba(184, 92, 56, .5);
+            font-style: italic;
+        }
+
+        .id-footer-bottom {
+            display: flex;
+            justify-content: center;
+        }
+
         .id-footer-back {
             font-family: 'Caveat', cursive;
             font-size: 1rem;
             color: rgba(184, 92, 56, .8);
             background: none;
             border: 1.5px solid rgba(184, 92, 56, .4);
-            padding: .35rem 1rem;
+            padding: .35rem 1.4rem;
             cursor: pointer;
             border-radius: 3px;
             transition: all .2s;
@@ -4571,17 +4589,13 @@
 
         <!-- Footer -->
         <footer class="id-footer">
-            <p>Allan V. Jabol Jr. — creative corner ✦ the other side of the portfolio</p>
-            <a href="https://www.instagram.com/_omikuji?igsh=bGZiNGM3dWczNTM1" target="_blank" rel="noopener"
-                class="id-ig-link" style="font-size:.92rem;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
-                    <rect x="2" y="2" width="20" height="20" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
-                </svg>
-                @_omikuji
-            </a>
-            <button class="id-footer-back" id="identityCloseFooter">↩ back to portfolio</button>
+            <div class="id-footer-top">
+                <p>Allan V. Jabol Jr. — creative corner ✦ the other side of the portfolio</p>
+                <p class="id-footer-hint">scroll down 3× to return ↓</p>
+            </div>
+            <div class="id-footer-bottom">
+                <button class="id-footer-back" id="identityCloseFooter">↩ back to portfolio</button>
+            </div>
         </footer>
     </div>
 
@@ -6322,6 +6336,7 @@
                 isOpen = true;
                 count = 0;
                 section.removeAttribute('aria-hidden');
+                section.scrollTop = 0;
                 section.classList.add('open');
                 document.body.style.overflow = 'hidden';
                 setTimeout(() => {
@@ -6347,8 +6362,9 @@
             if (footerCloseBtn) footerCloseBtn.addEventListener('click', closeSection);
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) closeSection(); });
 
-            // Smooth scroll within the creative site
+            // Smooth scroll within the creative site (skip external links)
             document.querySelectorAll('.id-nav-links a').forEach(a => {
+                if (a.getAttribute('href').startsWith('http')) return;
                 a.addEventListener('click', e => {
                     e.preventDefault();
                     const target = document.querySelector(a.getAttribute('href'));
@@ -6356,11 +6372,11 @@
                 });
             });
 
-            // ── Wheel (desktop) — silent counter ──
+            // ── Wheel (desktop) — silent counter to OPEN ──
             const heroCanvas = document.getElementById('heroRight');
             window.addEventListener('wheel', e => {
                 if (isOpen) return;
-                if (heroCanvas && heroCanvas.contains(e.target)) return; // ignore ESP32 canvas scrolls
+                if (heroCanvas && heroCanvas.contains(e.target)) return;
                 const atTop = window.scrollY <= TOP_ZONE;
                 if (!atTop) { count = 0; return; }
                 if (e.deltaY < -10) {
@@ -6374,7 +6390,45 @@
                 }
             }, { passive: true });
 
-            // ── Touch (mobile) — silent counter ──
+            // ── Wheel (desktop) — scroll DOWN 3× at bottom to CLOSE ──
+            let closeCount = 0, lastCloseCount = 0;
+            const CLOSE_REQUIRED = 3;
+            const CLOSE_COOLDOWN = 350;
+
+            section.addEventListener('wheel', e => {
+                if (!isOpen) return;
+                if (e.deltaY < 10) { closeCount = 0; return; }
+                // Only trigger when scrolled near the bottom of the section
+                const nearBottom = section.scrollHeight - section.scrollTop - section.clientHeight < 80;
+                if (!nearBottom) { closeCount = 0; return; }
+                const now = Date.now();
+                if (now - lastCloseCount < CLOSE_COOLDOWN) return;
+                lastCloseCount = now;
+                closeCount = Math.min(closeCount + 1, CLOSE_REQUIRED);
+                if (closeCount >= CLOSE_REQUIRED) { closeCount = 0; closeSection(); }
+            }, { passive: true });
+
+            // ── Touch (mobile) — swipe DOWN at bottom to CLOSE ──
+            let idTouchStartY = null;
+            section.addEventListener('touchstart', e => { idTouchStartY = e.touches[0].clientY; }, { passive: true });
+            section.addEventListener('touchend', e => {
+                if (!isOpen || idTouchStartY === null) return;
+                const dy = e.changedTouches[0].clientY - idTouchStartY;
+                idTouchStartY = null;
+                const nearBottom = section.scrollHeight - section.scrollTop - section.clientHeight < 80;
+                if (!nearBottom) { closeCount = 0; return; }
+                if (dy < -55) { // swipe up = scroll down
+                    const now = Date.now();
+                    if (now - lastCloseCount < CLOSE_COOLDOWN) return;
+                    lastCloseCount = now;
+                    closeCount = Math.min(closeCount + 1, CLOSE_REQUIRED);
+                    if (closeCount >= CLOSE_REQUIRED) { closeCount = 0; closeSection(); }
+                } else if (dy > 30) {
+                    closeCount = 0;
+                }
+            }, { passive: true });
+
+            // ── Touch (mobile) — silent counter to OPEN ──
             let touchStartY = null;
             window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
             window.addEventListener('touchend', e => {
